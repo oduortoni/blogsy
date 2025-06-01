@@ -1,13 +1,29 @@
 <?php
+/*
+* author: @toni
+* date: 2025-06-01
+* description: HTTP controller for creating posts
+* file: app/Http/Controllers/PostController.php
+*/
+
+declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use App\Models\Post;
+use Illuminate\Http\Request;
+use Blogsy\Application\Blog\Interfaces\PostUseCaseInterface;
+use Illuminate\Routing\Controller;
 
 class PostController extends Controller
 {
+    protected $useCase;
+
+    public function __construct(PostUseCaseInterface $useCase)
+    {
+        $this->useCase = $useCase;
+    }
+
     /*
     * Store a new post
     *
@@ -23,12 +39,17 @@ class PostController extends Controller
             'is_published' => 'sometimes|boolean',
         ]);
 
-        $post = Post::create([
+        $this->useCase->create([
             ...$validated,
             'views' => 0,
             'likes' => 0,
         ]);
 
-        return response()->json($post, 201);
+        return response()->json(['message' => 'Post created'], 201);
     }
+
+    // public function index() {}
+    // public function show(Post $post) {}
+    // public function update(Request $request, Post $post) {}
+    // public function destroy(Post $post) {}
 }
