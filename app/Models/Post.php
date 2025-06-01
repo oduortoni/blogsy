@@ -31,7 +31,7 @@ class Post extends Model
 
     public function getIsPublishedAttribute($value)
     {
-        return $value ? 'Yes' : 'No';
+        return $value ? true : false;
     }
 
     public function getRouteKeyName()

@@ -33,4 +33,59 @@ class EloquentPostRepository implements PostRepositoryInterface
             'likes' => $post->likes,
         ]);
     }
+
+    /*
+     * List all posts
+     *
+     * @return array
+     */
+    public function list(): array
+    {
+        $posts = Post::all()->map(function ($post) {
+            return [
+                'id' => $post->id,
+                'title' => $post->title,
+                'slug' => $post->slug,
+                'content' => substr($post->content, 0, 100) . '...',
+                'created_at' => $post->created_at,
+                'updated_at' => $post->updated_at,
+            ];
+        })->toArray();
+        return $posts;
+    }
+
+    /*
+     * Find a post by id
+     *
+     * @param int $id
+     * @return DomainPost
+     */
+    public function find(int $id): DomainPost
+    {
+        $eloquentPost = Post::find($id);
+        $post = DomainPost::fromArray([
+            'id' => $eloquentPost->id,
+            'title' => $eloquentPost->title,
+            'slug' => $eloquentPost->slug,
+            'content' => $eloquentPost->content,
+            'is_published' => $eloquentPost->is_published,
+            'views' => $eloquentPost->views ?? 0,
+            'likes' => $eloquentPost->likes ?? 0,
+            'created_at' => $eloquentPost->created_at,
+            'updated_at' => $eloquentPost->updated_at,
+        ]);
+
+        return $post;
+    }
+
+    /*
+     * Increment the views of a post
+     *
+     * @param int $id
+     * @return void
+     */
+    public function incrementViews(int $id): void
+    {
+        Post::find($id)->increment('views');
+    }
 }

@@ -31,15 +31,33 @@ class PostUseCase implements PostUseCaseInterface
      */
     public function create(array $data): void
     {
-        $post = new Post(
-            $data['title'],
-            $data['content'],
-            $data['slug'],
-            $data['is_published'],
-            $data['views'],
-            $data['likes']
-        );
-
+        $post = Post::fromArray($data);
         $this->repository->save($post);
+    }
+
+    /*
+     * List all posts
+     *
+     * @return array
+     */
+    public function list(): array
+    {
+        return $this->repository->list();
+    }
+
+    /*
+     * Find a post by id
+     *
+     * @param int $id
+     * @return Post
+     */
+    public function find(int $id): Post
+    {
+        $post = $this->repository->find($id);
+        if (!$post) {
+            return null;
+        }
+        $this->repository->incrementViews($id);
+        return $post;
     }
 }

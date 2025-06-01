@@ -25,6 +25,21 @@ class PostController extends Controller
     }
 
     /*
+    * List all posts
+    *
+    * @return JsonResponse
+    */
+    public function index(): JsonResponse
+    {
+        $posts = $this->useCase->list();
+
+        return response()->json([
+            'posts' => $posts,
+            'message' => 'Posts fetched successfully',
+        ], 200);
+    }
+
+    /*
     * Store a new post
     *
     * @param Request $request
@@ -48,8 +63,26 @@ class PostController extends Controller
         return response()->json(['message' => 'Post created'], 201);
     }
 
-    // public function index() {}
-    // public function show(Post $post) {}
+    /*
+    * Show a post by id
+    *
+    * @param int $id
+    * @return JsonResponse
+    */
+    public function show(int $id): JsonResponse
+    {
+        $post = $this->useCase->find($id);
+        if (!$post) {
+            return response()->json([
+                'message' => 'Post not found',
+            ], 404);
+        }
+        return response()->json([
+            'post' => $post,
+            'message' => 'Post fetched successfully',
+        ], 200);
+    }
+
     // public function update(Request $request, Post $post) {}
     // public function destroy(Post $post) {}
 }
