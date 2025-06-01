@@ -92,9 +92,18 @@ This project embraces an incremental development approach where:
 ### Example curl test for creating a blog post
 
 ```bash
-curl -X POST http://localhost:8000/api/posts \
--H "Content-Type: application/json" \
--d '{"title":"My First Post", "content":"Hello Blogsy!"}'
+curl -X POST http://localhost:8000/api/posts/store   -H "Content-Type: application/json"   -d '{
+    "title": "First After Second",
+    "content": "This is a kool post",
+    "slug": "first-after-second",
+    "is_published": true
+}'
+```
+
+with a result for example
+
+```bash
+{"title":"First After Second","content":"This is a kool post","slug":"first-after-second","is_published":"Yes","views":0,"likes":0,"updated_at":"01-06-2025 11:25:17","created_at":"01-06-2025 11:25:17","id":2}
 ```
 
 You can run similar curl commands for other endpoints as they are implemented.
