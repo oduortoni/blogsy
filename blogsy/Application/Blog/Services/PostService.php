@@ -3,18 +3,18 @@
 * author: @toni
 * date: 2025-06-01
 * description: Create post use case
-* file: blogsy/blogsy/Application/Blog/UseCases/PostUseCase.php
+* file: blogsy/blogsy/Application/Blog/Services/PostService.php
 */
 
 declare(strict_types=1);
 
-namespace Blogsy\Application\Blog\UseCases;
+namespace Blogsy\Application\Blog\Services;
 
 use Blogsy\Domain\Blog\Entities\Post;
 use Blogsy\Domain\Blog\Interfaces\PostRepositoryInterface;
-use Blogsy\Application\Blog\Interfaces\PostUseCaseInterface;
+use Blogsy\Application\Blog\Interfaces\PostServiceInterface;
 
-class PostUseCase implements PostUseCaseInterface
+class PostService implements PostServiceInterface
 {
     protected $repository;
 

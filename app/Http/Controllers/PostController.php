@@ -12,16 +12,16 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Blogsy\Application\Blog\Interfaces\PostUseCaseInterface;
+use Blogsy\Application\Blog\Interfaces\PostServiceInterface;
 use Illuminate\Routing\Controller;
 
 class PostController extends Controller
 {
-    protected $useCase;
+    protected $service;
 
-    public function __construct(PostUseCaseInterface $useCase)
+    public function __construct(PostServiceInterface $service)
     {
-        $this->useCase = $useCase;
+        $this->service = $service;
     }
 
     /*
@@ -31,7 +31,7 @@ class PostController extends Controller
     */
     public function index(): JsonResponse
     {
-        $posts = $this->useCase->list();
+        $posts = $this->service->list();
 
         return response()->json([
             'posts' => $posts,
@@ -54,7 +54,7 @@ class PostController extends Controller
             'is_published' => 'sometimes|boolean',
         ]);
 
-        $this->useCase->create([
+        $this->service->create([
             ...$validated,
             'views' => 0,
             'likes' => 0,
@@ -71,7 +71,7 @@ class PostController extends Controller
     */
     public function show(int $id): JsonResponse
     {
-        $post = $this->useCase->find($id);
+        $post = $this->service->find($id);
         if (!$post) {
             return response()->json([
                 'message' => 'Post not found',
@@ -98,14 +98,14 @@ class PostController extends Controller
             'is_published' => 'sometimes|boolean',
         ]);
 
-        $post = $this->useCase->find($id);
+        $post = $this->service->find($id);
         if (!$post) {
             return response()->json([
                 'message' => 'Post not found',
             ], 404);
         }
         
-        $this->useCase->update($id, $validated);
+        $this->service->update($id, $validated);
 
         return response()->json(['message' => 'Post updated'], 200);
     }
@@ -118,7 +118,7 @@ class PostController extends Controller
     */
     public function destroy(int $id): JsonResponse
     {
-        $this->useCase->delete($id);
+        $this->service->delete($id);
         return response()->json(['message' => 'Post deleted'], 200);
     }
 }
