@@ -2,11 +2,11 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
-use Blogsy\Domain\Blog\Interfaces\PostRepositoryInterface;
 use App\Repositories\EloquentPostRepository;
 use Blogsy\Application\Blog\Interfaces\PostServiceInterface;
-use Blogsy\Application\Blog\Services\PostService; 
+use Blogsy\Application\Blog\Services\PostService;
+use Blogsy\Domain\Blog\Interfaces\PostRepositoryInterface;
+use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {

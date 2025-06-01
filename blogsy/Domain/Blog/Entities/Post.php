@@ -1,4 +1,5 @@
 <?php
+
 /*
 * author: @toni
 * date: 2025-06-01
@@ -9,8 +10,6 @@
 declare(strict_types=1);
 
 namespace Blogsy\Domain\Blog\Entities;
-
-use Carbon\Carbon;
 
 class Post
 {
@@ -28,14 +27,11 @@ class Post
 
     /**
      * Create a new Post from an array of data
-     *
-     * @param array $data
-     * @return static
      */
     public static function fromArray(array $data): static
     {
         $now = date('d-m-Y H:i:s');
-        
+
         return new static(
             $data['id'] ?? 0,
             $data['title'],

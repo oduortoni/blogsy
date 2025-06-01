@@ -1,4 +1,5 @@
 <?php
+
 /*
 * author: @toni
 * date: 2025-06-01
@@ -10,9 +11,9 @@ declare(strict_types=1);
 
 namespace Blogsy\Application\Blog\Services;
 
+use Blogsy\Application\Blog\Interfaces\PostServiceInterface;
 use Blogsy\Domain\Blog\Entities\Post;
 use Blogsy\Domain\Blog\Interfaces\PostRepositoryInterface;
-use Blogsy\Application\Blog\Interfaces\PostServiceInterface;
 
 class PostService implements PostServiceInterface
 {
@@ -54,10 +55,11 @@ class PostService implements PostServiceInterface
     public function find(int $id): Post
     {
         $post = $this->repository->find($id);
-        if (!$post) {
+        if (! $post) {
             return null;
         }
         $this->repository->incrementViews($id);
+
         return $post;
     }
 

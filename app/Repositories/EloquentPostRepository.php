@@ -1,4 +1,5 @@
 <?php
+
 /*
 * author: @toni
 * date: 2025-06-01
@@ -10,9 +11,9 @@ declare(strict_types=1);
 
 namespace App\Repositories;
 
+use App\Models\Post;
 use Blogsy\Domain\Blog\Entities\Post as DomainPost;
 use Blogsy\Domain\Blog\Interfaces\PostRepositoryInterface;
-use App\Models\Post;
 
 class EloquentPostRepository implements PostRepositoryInterface
 {
@@ -46,11 +47,12 @@ class EloquentPostRepository implements PostRepositoryInterface
                 'id' => $post->id,
                 'title' => $post->title,
                 'slug' => $post->slug,
-                'content' => substr($post->content, 0, 100) . '...',
+                'content' => substr($post->content, 0, 100).'...',
                 'created_at' => $post->created_at,
                 'updated_at' => $post->updated_at,
             ];
         })->toArray();
+
         return $posts;
     }
 

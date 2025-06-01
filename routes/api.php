@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ApiController;
 use App\Http\Controllers\PostController;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', [ApiController::class, 'api']);
 Route::get('/posts', [PostController::class, 'index'])->name('posts.index');

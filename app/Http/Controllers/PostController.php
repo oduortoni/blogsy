@@ -1,4 +1,5 @@
 <?php
+
 /*
 * author: @toni
 * date: 2025-06-01
@@ -10,9 +11,9 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use Blogsy\Application\Blog\Interfaces\PostServiceInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Blogsy\Application\Blog\Interfaces\PostServiceInterface;
 use Illuminate\Routing\Controller;
 
 class PostController extends Controller
@@ -72,11 +73,12 @@ class PostController extends Controller
     public function show(int $id): JsonResponse
     {
         $post = $this->service->find($id);
-        if (!$post) {
+        if (! $post) {
             return response()->json([
                 'message' => 'Post not found',
             ], 404);
         }
+
         return response()->json([
             'post' => $post,
             'message' => 'Post fetched successfully',
@@ -90,7 +92,8 @@ class PostController extends Controller
     * @param int $id
     * @return JsonResponse
     */
-    public function update(Request $request, int $id): JsonResponse {
+    public function update(Request $request, int $id): JsonResponse
+    {
         $validated = $request->validate([
             'title' => 'nullable|string|max:255',
             'content' => 'nullable|string',
@@ -99,12 +102,12 @@ class PostController extends Controller
         ]);
 
         $post = $this->service->find($id);
-        if (!$post) {
+        if (! $post) {
             return response()->json([
                 'message' => 'Post not found',
             ], 404);
         }
-        
+
         $this->service->update($id, $validated);
 
         return response()->json(['message' => 'Post updated'], 200);
@@ -119,6 +122,7 @@ class PostController extends Controller
     public function destroy(int $id): JsonResponse
     {
         $this->service->delete($id);
+
         return response()->json(['message' => 'Post deleted'], 200);
     }
 }

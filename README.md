@@ -15,10 +15,10 @@ The core business logic lives in a portable `blogsy/` folder, making it easy to 
 
 ## Goals
 
-- Portable and maintainable backend structure  
-- DDD-inspired domain isolation  
-- Testable via HTTP (curl) before any frontend is introduced  
-- Git history that reflects meaningful, step-by-step progress  
+- Portable and maintainable backend structure
+- DDD-inspired domain isolation
+- Testable via HTTP (curl) before any frontend is introduced
+- Git history that reflects meaningful, step-by-step progress
 
 ---
 
@@ -110,7 +110,7 @@ with a result for example
 curl \
   -X POST \
   -H "Content-Type: application/json" \
-  -d '{ 
+  -d '{
     "title": "5 is the number of our fingers",
     "content": "Of course it is easier to count by five. We are humans after all"
   }' \

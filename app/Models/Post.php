@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Model;
 
 class Post extends Model
 {
@@ -17,6 +17,7 @@ class Post extends Model
     ];
 
     protected $table = 'posts';
+
     protected $dateFormat = 'd-m-Y H:i:s';
 
     public function getCreatedAtAttribute($value)

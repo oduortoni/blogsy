@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📘 Blogsy API Documentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #fff;
+            padding: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #000;
+        }
+
+        .base-url {
+            background: #f5f5f5;
+            padding: 1rem;
+            border: 1px solid #ddd;
+            font-family: monospace;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .endpoint {
+            border: 1px solid #ddd;
+            margin-bottom: 2rem;
+            background: #fff;
+        }
+
+        .endpoint-header {
+            background: #f8f8f8;
+            padding: 1rem;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .method {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border: 1px solid #000;
+            font-weight: bold;
+            margin-right: 1rem;
+            background: #fff;
+        }
+
+        .endpoint-path {
+            font-family: monospace;
+            font-weight: bold;
+        }
+
+        .endpoint-body {
+            padding: 1.5rem;
+        }
+
+        .description {
+            margin-bottom: 1.5rem;
+        }
+
+        .section {
+            margin-bottom: 1.5rem;
+        }
+
+        .section h4 {
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 0.3rem;
+        }
+
+        .code-block {
+            background: #f8f8f8;
+            border: 1px solid #ddd;
+            padding: 1rem;
+            font-family: monospace;
+            overflow-x: auto;
+            margin: 1rem 0;
+            white-space: pre;
+        }
+
+        .parameters {
+            background: #f8f8f8;
+            padding: 1rem;
+            border: 1px solid #ddd;
+        }
+
+        .parameter {
+            margin-bottom: 0.5rem;
+        }
+
+        .param-name {
+            font-family: monospace;
+            font-weight: bold;
+        }
+
+        .param-type {
+            color: #666;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <h1>📘 Blogsy API Documentation</h1>
+    
+    <div class="base-url">Base URL: http://localhost:8000/api</div>
+
+    <div class="endpoint">
+        <div class="endpoint-header">
+            <span class="method">GET</span>
+            <span class="endpoint-path">/</span>
+        </div>
+        <div class="endpoint-body">
+            <div class="description">
+                Returns a list of all available API endpoints.
+            </div>
+            <div class="section">
+                <h4>Sample cURL:</h4>
+                <div class="code-block">curl http://localhost:8000/api/</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="endpoint">
+        <div class="endpoint-header">
+            <span class="method">GET</span>
+            <span class="endpoint-path">/posts</span>
+        </div>
+        <div class="endpoint-body">
+            <div class="description">
+                Fetch all blog posts.
+            </div>
+            <div class="section">
+                <h4>Response:</h4>
+                <div class="code-block">[
+  {
+    "id": 1,
+    "title": "Example Post",
+    "slug": "example-post",
+    "content": "The first 100 characters...",
+    "created_at": "2025-06-01T10:00:00Z",
+    "updated_at": "2025-06-01T10:00:00Z"
+  },
+  ...
+]</div>
+            </div>
+            <div class="section">
+                <h4>Sample cURL:</h4>
+                <div class="code-block">curl http://localhost:8000/api/posts</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="endpoint">
+        <div class="endpoint-header">
+            <span class="method">GET</span>
+            <span class="endpoint-path">/posts/{id}</span>
+        </div>
+        <div class="endpoint-body">
+            <div class="description">
+                Fetch a single post by ID.
+            </div>
+            <div class="section">
+                <h4>URL Parameters:</h4>
+                <div class="parameters">
+                    <div class="parameter">
+                        <span class="param-name">id</span> <span class="param-type">(integer)</span>: The post ID.
+                    </div>
+                </div>
+            </div>
+            <div class="section">
+                <h4>Sample cURL:</h4>
+                <div class="code-block">curl http://localhost:8000/api/posts/1</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="endpoint">
+        <div class="endpoint-header">
+            <span class="method">POST</span>
+            <span class="endpoint-path">/posts/store</span>
+        </div>
+        <div class="endpoint-body">
+            <div class="description">
+                Create a new blog post.
+            </div>
+            <div class="section">
+                <h4>Required JSON Body:</h4>
+                <div class="code-block">{
+  "title": "5 is the number of our fingers",
+  "content": "Of course it is easier to count by five. We are humans after all.",
+  "slug": "five-fingers",
+  "is_published": true,
+  "views": 0,
+  "likes": 0
+}</div>
+            </div>
+            <div class="section">
+                <h4>Sample cURL:</h4>
+                <div class="code-block">curl -X POST http://localhost:8000/api/posts/store \
+  -H "Content-Type: application/json" \
+  -d '{
+    "title": "5 is the number of our fingers",
+    "content": "Of course it is easier to count by five. We are humans after all.",
+    "slug": "five-fingers",
+    "is_published": true,
+    "views": 0,
+    "likes": 0
+  }'</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="endpoint">
+        <div class="endpoint-header">
+            <span class="method">POST</span>
+            <span class="endpoint-path">/posts/update/{id}</span>
+        </div>
+        <div class="endpoint-body">
+            <div class="description">
+                Update an existing post by ID.
+            </div>
+            <div class="section">
+                <h4>URL Parameters:</h4>
+                <div class="parameters">
+                    <div class="parameter">
+                        <span class="param-name">id</span> <span class="param-type">(integer)</span>: The post ID.
+                    </div>
+                </div>
+            </div>
+            <div class="section">
+                <h4>Sample cURL:</h4>
+                <div class="code-block">curl -X POST http://localhost:8000/api/posts/update/1 \
+  -H "Content-Type: application/json" \
+  -d '{
+    "title": "Updated Title",
+    "content": "Updated content goes here.",
+    "slug": "updated-title",
+    "is_published": true,
+    "views": 100,
+    "likes": 10
+  }'</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="endpoint">
+        <div class="endpoint-header">
+            <span class="method">DELETE</span>
+            <span class="endpoint-path">/posts/delete/{id}</span>
+        </div>
+        <div class="endpoint-body">
+            <div class="description">
+                Delete a post by ID.
+            </div>
+            <div class="section">
+                <h4>URL Parameters:</h4>
+                <div class="parameters">
+                    <div class="parameter">
+                        <span class="param-name">id</span> <span class="param-type">(integer)</span>: The post ID.
+                    </div>
+                </div>
+            </div>
+            <div class="section">
+                <h4>Sample cURL:</h4>
+                <div class="code-block">curl -X DELETE http://localhost:8000/api/posts/delete/1</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
