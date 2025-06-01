@@ -60,4 +60,27 @@ class PostUseCase implements PostUseCaseInterface
         $this->repository->incrementViews($id);
         return $post;
     }
+
+    /*
+     * Update a post by id
+     *
+     * @param int $id
+     * @param array $data
+     * @return void
+     */
+    public function update(int $id, array $data): void
+    {
+        $this->repository->update($id, $data);
+    }
+
+    /*
+     * Delete a post by id
+     *
+     * @param int $id
+     * @return void
+     */
+    public function delete(int $id): void
+    {
+        $this->repository->delete($id);
+    }
 }

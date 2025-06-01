@@ -83,6 +83,42 @@ class PostController extends Controller
         ], 200);
     }
 
-    // public function update(Request $request, Post $post) {}
-    // public function destroy(Post $post) {}
+    /*
+    * Update a post by id
+    *
+    * @param Request $request
+    * @param int $id
+    * @return JsonResponse
+    */
+    public function update(Request $request, int $id): JsonResponse {
+        $validated = $request->validate([
+            'title' => 'nullable|string|max:255',
+            'content' => 'nullable|string',
+            'slug' => 'nullable|string|unique:posts,slug|max:255',
+            'is_published' => 'sometimes|boolean',
+        ]);
+
+        $post = $this->useCase->find($id);
+        if (!$post) {
+            return response()->json([
+                'message' => 'Post not found',
+            ], 404);
+        }
+        
+        $this->useCase->update($id, $validated);
+
+        return response()->json(['message' => 'Post updated'], 200);
+    }
+
+    /*
+    * Delete a post by id
+    *
+    * @param int $id
+    * @return JsonResponse
+    */
+    public function destroy(int $id): JsonResponse
+    {
+        $this->useCase->delete($id);
+        return response()->json(['message' => 'Post deleted'], 200);
+    }
 }

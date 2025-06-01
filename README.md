@@ -106,6 +106,26 @@ with a result for example
 {"title":"First After Second","content":"This is a kool post","slug":"first-after-second","is_published":"Yes","views":0,"likes":0,"updated_at":"01-06-2025 11:25:17","created_at":"01-06-2025 11:25:17","id":2}
 ```
 
+```bash
+curl \
+  -X POST \
+  -H "Content-Type: application/json" \
+  -d '{ 
+    "title": "5 is the number of our fingers",
+    "content": "Of course it is easier to count by five. We are humans after all"
+  }' \
+  http://localhost:8000/api/posts/update/5
+
+```
+
+```bash
+{"message":"Post updated"}
+```
+
+```
+curl -X DELETE http://localhost:8000/api/posts/5
+```
+
 You can run similar curl commands for other endpoints as they are implemented.
 
 ---

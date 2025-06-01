@@ -88,4 +88,31 @@ class EloquentPostRepository implements PostRepositoryInterface
     {
         Post::find($id)->increment('views');
     }
+
+    /*
+     * Update a post by id
+    /*
+     * Update a post by id
+     *
+     * @param int $id
+     * @param array $data
+     * @return void
+     */
+    public function update(int $id, array $data): void
+    {
+        $post = Post::find($id);
+        $post->update($data);
+        $post->save();
+    }
+
+    /*
+     * Delete a post by id
+     *
+     * @param int $id
+     * @return void
+     */
+    public function delete(int $id): void
+    {
+        Post::find($id)->delete();
+    }
 }
