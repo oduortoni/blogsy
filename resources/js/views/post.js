@@ -9,7 +9,7 @@
 * contact: oduortoni@gmail.com
 */
 
-export const Post = async (postId) => {
+const Post = async (postId) => {
     window.app.innerHTML = '<p>Loading post...</p>';
     try {
         const result = await axios.get(`/api/posts/${postId}`).then(response => response.data);
@@ -35,3 +35,5 @@ const PostView = (post) => {
         </article>
     `;
 }
+
+export default Post;

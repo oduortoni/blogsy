@@ -8,7 +8,7 @@
 * file: blogsy/resources/js/views/posts.js
 * description: This file is used to render the list of posts.
 */
-export async function Posts() {
+const Posts = async () => {
     window.app.innerHTML = '<p>Loading posts...</p>';
     try {
         const result = await axios.get('/api/posts').then(response => response.data);
@@ -27,13 +27,15 @@ export async function Posts() {
         window.app.innerHTML = '<p>Failed to load posts.</p>';
         console.error(error);
     }
-}
+};
 
-function PostCard(post) {
+const PostCard = (post) => {
     return `
         <div class="post" onclick="window.views.Post(${post.id})">
             <h3>${post.title}</h3>
             <p>${post.content.substring(0, 100)}...</p>
         </div>
     `;
-}
+};
+
+export default Posts;

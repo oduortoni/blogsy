@@ -8,7 +8,7 @@
 * copyright: 2025 toni
 * contact: oduortoni@gmail.com
 */
-export const Home = (app) => {
+const Home = (app) => {
     app.innerHTML = `
         <section class="hero">
             <h1>Welcome to Blogsy</h1>
@@ -20,3 +20,5 @@ export const Home = (app) => {
     // Attach event listener to button after rendering
     document.getElementById('view-posts').onclick = window.views.Posts;
 };
+
+export default Home;

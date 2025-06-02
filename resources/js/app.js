@@ -9,29 +9,43 @@
 * contact: oduortoni@gmail.com
 */
 import "./bootstrap";
-
-import { Home } from './views/home.js';
-import { Posts } from './views/posts.js';
-import { Post } from './views/post.js';
+import { Home, Posts, Post } from './views/index.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     const app = document.getElementById('app');
-    const navHome = document.getElementById('nav-home');
-    const navPosts = document.getElementById('nav-posts');
 
+    // Global references
     window.app = app;
-    window.views = {
-        Home,
-        Posts,
-        Post
+    window.views = { Home, Posts, Post };
+
+    // Router
+    function router(path) {
+        if (path === '/' || path === '/home') {
+            Home(app);
+        } else if (path === '/posts') {
+            Posts(app);
+        } else if (path.startsWith('/posts/')) {
+            const id = path.split('/')[2];
+            Post(id);
+        } else {
+            app.innerHTML = '<p>Page not found.</p>';
+        }
+    }
+
+    window.router = (path) => {
+        history.pushState({}, '', path);
+        router(path);
     };
 
-    navHome.onclick = () => {
-        window.views.Home(window.app);
-    };
-    navPosts.onclick = () => {
-        window.views.Posts(window.app);
+    // Enable popstate (back/forward navigation)
+    window.onpopstate = () => {
+        router(location.pathname);
     };
 
-    window.views.Home(window.app); // Load home by default
+    // Navbar links
+    document.getElementById('nav-home').onclick = () => router('/home');
+    document.getElementById('nav-posts').onclick = () => router('/posts');
+
+    // Initial load
+    router(location.pathname);
 });
