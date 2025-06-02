@@ -32,6 +32,8 @@ const PostView = (post) => {
                 ${post.content}
             </div>
             <button class="btn" onclick="window.views.Posts(window.app)">← Back to Posts</button>
+            <button class="btn" onclick="window.views.PostUpdate(${post.id})">Edit</button>
+            <button class="btn" onclick="window.views.PostDelete(${post.id})">Delete</button>
         </article>
     `;
 }

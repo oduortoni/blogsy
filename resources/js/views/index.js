@@ -12,9 +12,17 @@
 import Home from './home.js';
 import Posts from './posts.js';
 import Post from './post.js';
+import PostUpdate from './post-update.js';
+import PostDelete from './post-delete.js';
+import About from './about.js';
+import Dialog from './dialog.js';
 
 export {
     Home,
+    About,
     Posts,
-    Post
+    Post,
+    PostDelete,
+    PostUpdate,
+    Dialog,
 };
