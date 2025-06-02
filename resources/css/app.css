@@ -57,7 +57,7 @@ nav ul li {
 }
 
 /* Hero */
-.hero {
+.app {
     background-color: var(--primary-light);
     padding: 4rem 2rem;
     text-align: center;
@@ -108,4 +108,61 @@ footer {
     border: none;
     border-radius: 6px;
     cursor: pointer;
+}
+
+/* === Post List View === */
+.posts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.post {
+    border: 1px solid #eee;
+    padding: 1.5rem;
+    border-radius: 8px;
+    background-color: var(--primary-light);
+    transition: box-shadow 0.3s;
+    cursor: pointer;
+}
+
+.post:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.post h3 {
+    margin-bottom: 0.5rem;
+    font-size: 1.25rem;
+}
+
+.post p {
+    color: #555;
+}
+
+/* === Single Post Detail View === */
+.post-detail {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: #fff;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+.post-detail h2 {
+    margin-bottom: 1rem;
+    font-size: 2rem;
+}
+
+.post-detail .meta {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 1.5rem;
+}
+
+.post-detail .content {
+    line-height: 1.7;
+    font-size: 1.05rem;
+    margin-bottom: 2rem;
 }
