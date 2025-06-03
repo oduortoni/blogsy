@@ -1,6 +1,6 @@
 /*
  * file: blogsy/resources/js/lib/router.js
- * description: This file is used to route the application to the correct view based on the current path
+ * description: This file is used to route the application to the correct view based on the current path. Uses the history API to navigate between pages.
  * author: toni
  * date: 2025-06-02
  * version: 1.0.0

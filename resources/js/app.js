@@ -1,6 +1,6 @@
 /*
  * file: blogsy/resources/js/app.js
- * description: Bootstraps the SPA and sets up client-side routing using History API.
+ * description: Bootstraps the SPA and sets up client-side routing.
  * author: toni
  * date: 2025-06-02
  * version: 1.1.0
@@ -59,6 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     // Navbar links
+    document.getElementById("nav-logo").onclick = () => router.navigate("/");
     document.getElementById("nav-home").onclick = () => router.navigate("/");
     document.getElementById("nav-posts").onclick = () =>
         router.navigate("/posts");
