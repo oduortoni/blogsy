@@ -16,8 +16,7 @@ const Posts = async (app, params) => {
             .then((response) => response.data);
 
         app.innerHTML = `
-            <h2>All Posts</h2>
-            <button onclick="window.router.navigate('/posts/create')" class="btn btn-primary">Create Post</button>
+            <h2>Posts <button onclick="window.router.navigate('/posts/create')" class="create-btn" title="Create New Post">+</button></h2>
             <div class="posts">
                 ${
                     result.posts.length > 0
@@ -35,8 +34,10 @@ const Posts = async (app, params) => {
 const PostCard = (post) => {
     return `
         <div class="post" onclick="window.router.navigate('/posts/post/${post.id}')">
-            <h3>${post.title}</h3>
-            <p>${post.content.substring(0, 100)}...</p>
+            <div class="post-content">
+                <h3>${post.title}</h3>
+                <p>${post.content.substring(0, 80)}...</p>
+            </div>
         </div>
     `;
 };

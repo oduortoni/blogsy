@@ -33,9 +33,11 @@ const PostView = (post) => {
             <div class="content">
                 ${post.content}
             </div>
-            <button class="btn" onclick="window.router.navigate('/posts')">← Back to Posts</button>
-            <button class="btn" onclick="window.router.navigate('/posts/edit/${post.id}')">Edit</button>
-            <button class="btn" onclick="window.router.navigate('/posts/delete/${post.id}')">Delete</button>
+            <div class="post-actions">
+                <button class="btn btn-back" onclick="window.router.navigate('/posts')" title="Back to Posts">←</button>
+                <button class="btn btn-edit" onclick="window.router.navigate('/posts/edit/${post.id}')" title="Edit Post">✎</button>
+                <button class="btn btn-delete" onclick="window.router.navigate('/posts/delete/${post.id}')" title="Delete Post">✕</button>
+            </div>
         </article>
     `;
 };

@@ -13,7 +13,7 @@ const Home = (app) => {
         <section class="hero">
             <h1>Welcome to Blogsy</h1>
             <p>A modular blog powered by Laravel & clean architecture.</p>
-            <button class="btn" id="view-posts">View Posts</button>
+            <button class="btn" id="view-posts">Posts</button>
         </section>
     `;
 
