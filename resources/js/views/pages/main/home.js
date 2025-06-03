@@ -1,13 +1,13 @@
 /*
-* file: blogsy/resources/js/views/index.js
-* description: This file is used to render the home view.
-* author: toni
-* date: 2025-06-02
-* version: 1.0.0
-* license: MIT
-* copyright: 2025 toni
-* contact: oduortoni@gmail.com
-*/
+ * file: blogsy/resources/js/views/index.js
+ * description: This file is used to render the home view.
+ * author: toni
+ * date: 2025-06-02
+ * version: 1.0.0
+ * license: MIT
+ * copyright: 2025 toni
+ * contact: oduortoni@gmail.com
+ */
 const Home = (app) => {
     app.innerHTML = `
         <section class="hero">
@@ -18,7 +18,7 @@ const Home = (app) => {
     `;
 
     // Attach event listener to button after rendering
-    document.getElementById('view-posts').onclick = window.views.Posts;
+    document.getElementById("view-posts").onclick = window.views.Posts;
 };
 
 export default Home;

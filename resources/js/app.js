@@ -1,90 +1,77 @@
 /*
-* file: blogsy/resources/js/app.js
-* description: Bootstraps the SPA and sets up client-side routing using History API.
-* author: toni
-* date: 2025-06-02
-* version: 1.1.0
-* license: MIT
-* copyright: 2025 toni
-* contact: oduortoni@gmail.com
-*/
+ * file: blogsy/resources/js/app.js
+ * description: Bootstraps the SPA and sets up client-side routing using History API.
+ * author: toni
+ * date: 2025-06-02
+ * version: 1.1.0
+ * license: MIT
+ * copyright: 2025 toni
+ * contact: oduortoni@gmail.com
+ */
 
 import "./bootstrap"; // development only for hot reloading
+import Router from "./lib/router.js";
+import {
+    Home,
+    About,
+    Posts,
+    Post,
+    PostUpdate,
+    PostDelete,
+    PostCreate,
+} from "./views/pages/index.js";
+import { Dialog } from "./views/components/index.js";
 
-import { Home, About, Posts, Post, PostUpdate, PostDelete, PostCreate } from './views/pages/index.js';
-import { Dialog } from './views/components/index.js';
-
-document.addEventListener('DOMContentLoaded', () => {
-    const app = document.getElementById('app');
+document.addEventListener("DOMContentLoaded", () => {
+    const app = document.getElementById("app");
 
     // Expose globally for convenience
     window.app = app;
-    window.views = { Dialog, Home, About, Posts, Post, PostUpdate, PostDelete, PostCreate };
+    window.views = {
+        Dialog,
+        Home,
+        About,
+        Posts,
+        Post,
+        PostUpdate,
+        PostDelete,
+        PostCreate,
+    };
 
-    /**
-     * Routes the application to the correct view based on the current path
-     */
-    function router(path) {
-        const segments = path.split('/').filter(Boolean); // e.g. /posts/1 => ['posts', '1']
+    const router = new Router();
 
-        // Home
-        if (segments.length === 0 || segments[0] === 'home') {
-            Home(app);
-        }
-
-        // About
-        else if (segments.length === 0 || segments[0] === 'about') {
-            About(app);
-        }
-
-        // List all posts
-        else if (segments[0] === 'posts' && segments.length === 1) {
-            Posts(app);
-        }
-
-        // Single post: /posts/1
-        else if (segments[0] === 'posts' && segments.length === 2) {
-            const id = segments[1];
-            Post(id);
-        }
-
-        // Edit post: /posts/edit/1
-        else if (segments[0] === 'posts' && segments[1] === 'edit') {
-            const id = segments[2];
-            PostUpdate(id);
-        }
-
-        // Create post: /posts/create
-        else if (segments[0] === 'posts' && segments[1] === 'create') {
-            PostCreate(app);
-        }
-
-        // Fallback
-        else {
-            app.innerHTML = `<section class="not-found"><h2>404 - Page Not Found</h2></section>`;
-        }
-    }
+    router.register("/", Home);
+    router.register("/about", About);
+    router.register("/posts", Posts);
+    router.register("/posts/post", Post);
+    router.register("/posts/create", PostCreate);
+    router.register("/posts/edit", PostUpdate);
+    router.register("/posts/delete", PostDelete);
+    router.fallback(Home);
 
     /**
      * Pushes a new route and calls the router
      */
-    window.router = (path) => {
-        history.pushState({}, '', path);
-        router(path);
+    const navigate = (path) => {
+        history.pushState({}, "", path);
+        router.route(path);
     };
 
     /**
      * Handles back/forward navigation
      */
     window.onpopstate = () => {
-        router(location.pathname);
+        navigate(location.pathname);
     };
 
     // Navbar links
-    document.getElementById('nav-home').onclick = () => router('/home');
-    document.getElementById('nav-posts').onclick = () => router('/posts');
-    document.getElementById('nav-about').onclick = () => router('/about');
+    document.getElementById("nav-home").onclick = () =>
+        navigate("/");
+    document.getElementById("nav-posts").onclick = () =>
+        navigate("/posts");
+    document.getElementById("nav-about").onclick = () =>
+        navigate("/about");
 
     // Initial route on page load
-    router(location.pathname);
+    navigate(location.pathname);
 });
