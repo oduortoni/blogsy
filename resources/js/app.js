@@ -9,7 +9,7 @@
  * contact: oduortoni@gmail.com
  */
 
-import "./bootstrap"; // development only for hot reloading
+import "./lib/bootstrap"; // development only for hot reloading
 import Router from "./lib/router.js";
 import { Dialog } from "./views/components/index.js";
 import {
