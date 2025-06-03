@@ -9,21 +9,20 @@
  * contact: oduortoni@gmail.com
  */
 
-const PostDelete = async (id) => {
+const PostDelete = async (app, params) => {
     window.views.Dialog(
         "Delete Post",
         "Are you sure you want to delete this post?",
         async () => {
             try {
-                const response = await axios.delete(`/api/posts/delete/${id}`);
+                const response = await axios.delete(`/api/posts/delete/${params.id}`);
                 console.info("Post deleted:", response.data);
 
                 window.views.Dialog(
                     "Deleted",
                     "Post deleted successfully.",
                     () => {
-                        history.pushState({}, "", "/posts");
-                        window.views.Posts();
+                        window.router.navigate("/posts");
                     },
                 );
             } catch (error) {

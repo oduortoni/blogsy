@@ -9,15 +9,15 @@
  * contact: oduortoni@gmail.com
  */
 
-const Post = async (postId) => {
-    window.app.innerHTML = "<p>Loading post...</p>";
+const Post = async (app, params) => {
+    app.innerHTML = "<p>Loading post...</p>";
     try {
         const result = await axios
-            .get(`/api/posts/${postId}`)
+            .get(`/api/posts/${params.id}`)
             .then((response) => response.data);
-        window.app.innerHTML = PostView(result.post);
+        app.innerHTML = PostView(result.post);
     } catch (error) {
-        window.app.innerHTML = "<p>Failed to load post.</p>";
+        app.innerHTML = "<p>Failed to load post.</p>";
         console.error(error);
     }
 };
@@ -33,9 +33,9 @@ const PostView = (post) => {
             <div class="content">
                 ${post.content}
             </div>
-            <button class="btn" onclick="window.views.Posts(window.app)">← Back to Posts</button>
-            <button class="btn" onclick="window.views.PostUpdate(${post.id})">Edit</button>
-            <button class="btn" onclick="window.views.PostDelete(${post.id})">Delete</button>
+            <button class="btn" onclick="window.router.navigate('/posts')">← Back to Posts</button>
+            <button class="btn" onclick="window.router.navigate('/posts/edit/${post.id}')">Edit</button>
+            <button class="btn" onclick="window.router.navigate('/posts/delete/${post.id}')">Delete</button>
         </article>
     `;
 };

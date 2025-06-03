@@ -11,10 +11,10 @@
 
 import Home from "./main/home.js";
 import About from "./main/about.js";
-import Posts from "./posts/posts.js";
-import Post from "./posts/post.js";
-import PostUpdate from "./posts/post-update.js";
-import PostDelete from "./posts/post-delete.js";
-import PostCreate from "./posts/post-create.js";
+import Post from "./posts/view.js";
+import Posts from "./posts/list.js";
+import PostUpdate from "./posts/update.js";
+import PostDelete from "./posts/delete.js";
+import PostCreate from "./posts/create.js";
 
 export { Home, About, Posts, Post, PostDelete, PostUpdate, PostCreate };

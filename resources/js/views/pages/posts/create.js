@@ -9,10 +9,9 @@
  */
 
 // Render form and attach event
-const PostCreate = () => {
-    history.pushState({}, "", "/posts/create");
+const PostCreate = (app, params) => {
 
-    window.app.innerHTML = `
+    app.innerHTML = `
         <form id="create-post-form" class="post-form">
             <input type="text" name="title" placeholder="Title" required />
             <textarea name="content" placeholder="Content" required></textarea>
@@ -41,8 +40,7 @@ const PostCreate = () => {
         try {
             const data = await createPost(title, content);
             window.views.Dialog("Success", "Post created successfully!", () => {
-                history.pushState({}, "", "/posts");
-                window.views.Posts();
+                window.router.navigate("/posts");
             });
         } catch {
             window.views.Dialog("Error", "Failed to create post.");

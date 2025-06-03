@@ -11,6 +11,7 @@
 
 import "./bootstrap"; // development only for hot reloading
 import Router from "./lib/router.js";
+import { Dialog } from "./views/components/index.js";
 import {
     Home,
     About,
@@ -20,7 +21,6 @@ import {
     PostDelete,
     PostCreate,
 } from "./views/pages/index.js";
-import { Dialog } from "./views/components/index.js";
 
 document.addEventListener("DOMContentLoaded", () => {
     const app = document.getElementById("app");
@@ -43,35 +43,29 @@ document.addEventListener("DOMContentLoaded", () => {
     router.register("/", Home);
     router.register("/about", About);
     router.register("/posts", Posts);
-    router.register("/posts/post", Post);
+    router.register("/posts/post/:id", Post);
     router.register("/posts/create", PostCreate);
-    router.register("/posts/edit", PostUpdate);
-    router.register("/posts/delete", PostDelete);
+    router.register("/posts/edit/:id", PostUpdate);
+    router.register("/posts/delete/:id", PostDelete);
     router.fallback(Home);
 
-    /**
-     * Pushes a new route and calls the router
-     */
-    const navigate = (path) => {
-        history.pushState({}, "", path);
-        router.route(path);
-    };
+    window.router = router;
 
     /**
      * Handles back/forward navigation
      */
     window.onpopstate = () => {
-        navigate(location.pathname);
+        router.navigate(location.pathname);
     };
 
     // Navbar links
     document.getElementById("nav-home").onclick = () =>
-        navigate("/");
+        router.navigate("/");
     document.getElementById("nav-posts").onclick = () =>
-        navigate("/posts");
+        router.navigate("/posts");
     document.getElementById("nav-about").onclick = () =>
-        navigate("/about");
+        router.navigate("/about");
 
     // Initial route on page load
-    navigate(location.pathname);
+    router.navigate(location.pathname);
 });

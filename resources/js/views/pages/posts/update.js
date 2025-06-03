@@ -10,15 +10,13 @@
  */
 
 // Load post and render form
-const PostUpdate = async (id) => {
+const PostUpdate = async (app, params) => {
     try {
-        const { data } = await axios.get(`/api/posts/${id}`);
+        const { data } = await axios.get(`/api/posts/${params.id}`);
         const post = data.post;
 
-        history.pushState({}, "", `/posts/${id}/edit`);
-
         // Render form
-        window.app.innerHTML = `
+        app.innerHTML = `
             <form id="update-post-form" class="post-form">
                 <input type="text" name="title" placeholder="Title" value="${post.title}" required />
                 <textarea name="content" placeholder="Content" required>${post.content}</textarea>
@@ -46,13 +44,12 @@ const PostUpdate = async (id) => {
             }
 
             try {
-                await updatePost(id, title, content);
+                await updatePost(post.id, title, content);
                 window.views.Dialog(
                     "Success",
                     "Post updated successfully!",
                     () => {
-                        history.pushState({}, "", `/posts/${id}`);
-                        window.views.Post(id);
+                        window.router.navigate(`/posts/post/${post.id}`);
                     },
                 );
             } catch {
@@ -61,7 +58,7 @@ const PostUpdate = async (id) => {
         };
     } catch (error) {
         console.error("Failed to load post for editing:", error);
-        window.app.innerHTML = `<p>Could not load post for editing.</p>`;
+        app.innerHTML = `<p>Could not load post for editing.</p>`;
     }
 };
 
