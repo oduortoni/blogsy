@@ -15,7 +15,9 @@ const PostDelete = async (app, params) => {
         "Are you sure you want to delete this post?",
         async () => {
             try {
-                const response = await axios.delete(`/api/posts/delete/${params.id}`);
+                const response = await axios.delete(
+                    `/api/posts/delete/${params.id}`,
+                );
                 console.info("Post deleted:", response.data);
 
                 window.views.Dialog(

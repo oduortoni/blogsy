@@ -59,8 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     // Navbar links
-    document.getElementById("nav-home").onclick = () =>
-        router.navigate("/");
+    document.getElementById("nav-home").onclick = () => router.navigate("/");
     document.getElementById("nav-posts").onclick = () =>
         router.navigate("/posts");
     document.getElementById("nav-about").onclick = () =>

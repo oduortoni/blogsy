@@ -10,7 +10,6 @@
 
 // Render form and attach event
 const PostCreate = (app, params) => {
-
     app.innerHTML = `
         <form id="create-post-form" class="post-form">
             <input type="text" name="title" placeholder="Title" required />

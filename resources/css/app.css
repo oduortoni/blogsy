@@ -1,11 +1,32 @@
+/*
+ * file: blogsy/resources/css/blogsy.css
+ * description: Global stylesheet for Blogsy SPA
+ * author: toni
+ * date: 2025-06-03
+ * version: 1.1.0
+ * license: MIT
+ */
+
 :root {
+    /* Color Palette */
     --primary-light: #fff7e6;
     --primary: #f9d37e;
     --primary-dark: #d8ae4c;
     --text: #000000;
-    --background: #ffffff;
+    --muted: #555555;
+    --background: #fffefb;
+    --border: #000000;
+
+    /* Buttons */
     --button: #000000;
     --button-text: #ffffff;
+    --button-hover: var(--primary-dark);
+
+    /* Modal Colors */
+    --modal-bg: #ffffff;
+    --modal-overlay: rgba(0, 0, 0, 0.6);
+    --modal-ok: #e53935;
+    --modal-cancel: #cccccc;
 }
 
 * {
@@ -28,7 +49,7 @@ body {
     min-height: 100vh;
 }
 
-/* Sticky Navbar */
+/* === Navbar === */
 nav {
     background-color: var(--primary);
     padding: 1rem 2rem;
@@ -54,9 +75,14 @@ nav ul {
 nav ul li {
     cursor: pointer;
     font-weight: 500;
+    transition: opacity 0.3s ease;
 }
 
-/* Hero */
+nav ul li:hover {
+    opacity: 0.7;
+}
+
+/* === Main Container === */
 .app {
     background-color: var(--primary-light);
     padding: 4rem 2rem;
@@ -64,6 +90,7 @@ nav ul li {
     flex: 1;
 }
 
+/* === Hero Section === */
 .hero h1 {
     font-size: 2.5rem;
     margin-bottom: 1rem;
@@ -77,37 +104,24 @@ nav ul li {
     margin-right: auto;
 }
 
-.btn {
+/* === Buttons === */
+.btn,
+.cta-button,
+form button[type="submit"] {
     background-color: var(--button);
     color: var(--button-text);
     padding: 0.75rem 1.5rem;
-    border: none;
-    cursor: pointer;
     font-size: 1rem;
+    border: none;
     border-radius: 4px;
+    cursor: pointer;
     transition: background-color 0.3s ease;
 }
 
-.btn:hover {
-    background-color: var(--primary-dark);
-}
-
-/* Footer */
-footer {
-    background-color: var(--primary);
-    text-align: center;
-    padding: 1rem;
-    font-weight: 500;
-}
-
-.cta-button {
-    background: var(--black);
-    color: white;
-    padding: 0.75rem 1.5rem;
-    font-size: 1rem;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
+.btn:hover,
+.cta-button:hover,
+form button[type="submit"]:hover {
+    background-color: var(--button-hover);
 }
 
 /* === Post List View === */
@@ -119,11 +133,11 @@ footer {
 }
 
 .post {
-    border: 1px solid #000000;
+    border: 1px solid var(--border);
     padding: 1.5rem;
     border-radius: 8px;
     background-color: var(--primary-light);
-    transition: box-shadow 0.3s;
+    transition: box-shadow 0.3s ease;
     cursor: pointer;
 }
 
@@ -137,17 +151,18 @@ footer {
 }
 
 .post p {
-    color: #555;
+    color: var(--muted);
 }
 
-/* === Single Post Detail View === */
+/* === Post Detail View === */
 .post-detail {
     max-width: 800px;
     margin: 2rem auto;
     padding: 2rem;
     background-color: var(--primary-dark);
     border-radius: 8px;
-    border: 1px solid #000000;
+    border: 1px solid var(--border);
+    color: var(--text);
 }
 
 .post-detail h2 {
@@ -157,7 +172,7 @@ footer {
 
 .post-detail .meta {
     font-size: 0.9rem;
-    color: #666;
+    color: var(--muted);
     margin-bottom: 1.5rem;
 }
 
@@ -167,7 +182,7 @@ footer {
     margin-bottom: 2rem;
 }
 
-/* form */
+/* === Form Styles === */
 form {
     background-color: var(--primary-light);
     padding: 2rem;
@@ -182,12 +197,12 @@ form {
 
 form input[type="text"],
 form textarea {
-    font-family: "Instrument Sans", sans-serif;
+    font-family: inherit;
     font-size: 1rem;
     padding: 0.75rem 1rem;
     border: 1px solid var(--primary-dark);
     border-radius: 4px;
-    background-color: #fff;
+    background-color: var(--background);
     color: var(--text);
     width: 100%;
 }
@@ -197,36 +212,22 @@ form textarea {
     resize: vertical;
 }
 
-form button[type="submit"] {
-    background-color: var(--button);
-    color: var(--button-text);
-    padding: 0.75rem 1.25rem;
-    font-size: 1rem;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    align-self: flex-start;
+/* === Footer === */
+footer {
+    background-color: var(--primary);
+    text-align: center;
+    padding: 1rem;
+    font-weight: 500;
 }
 
-form button[type="submit"]:hover {
-    background-color: var(--primary-dark);
-}
-
-@media (max-width: 600px) {
-    form {
-        padding: 1rem;
-        margin: 1rem;
-    }
-}
-
-/* confirmation dialog */
+/* === Modal / Dialog === */
 #confirm-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: var(--modal-overlay);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -234,7 +235,7 @@ form button[type="submit"]:hover {
 }
 
 .modal {
-    background: white;
+    background: var(--modal-bg);
     padding: 2rem;
     border-radius: 8px;
     text-align: center;
@@ -265,11 +266,27 @@ form button[type="submit"]:hover {
 }
 
 #modal-ok {
-    background-color: #e53935;
-    color: white;
+    background-color: var(--modal-ok);
+    color: var(--button-text);
 }
 
 #modal-cancel {
-    background-color: #ccc;
-    color: #000;
+    background-color: var(--modal-cancel);
+    color: var(--text);
+}
+
+/* === Responsive === */
+@media (max-width: 600px) {
+    form {
+        padding: 1rem;
+        margin: 1rem;
+    }
+
+    nav ul {
+        gap: 1rem;
+    }
+
+    .posts {
+        grid-template-columns: 1fr;
+    }
 }

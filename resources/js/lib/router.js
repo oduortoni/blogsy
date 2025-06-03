@@ -21,15 +21,15 @@ class Router {
 
     route(path) {
         const segments = path.split("/").filter(Boolean);
-        
+
         const route = this.#routes.find((route) => {
             const routeSegments = route.path.split("/").filter(Boolean);
-            
+
             // Check if the number of segments match
             if (segments.length !== routeSegments.length) {
                 return false;
             }
-            
+
             return routeSegments.every((segment, index) => {
                 if (segment.startsWith(":")) {
                     // This is a parameter segment, it matches any value e.g :id within posts/post/:id
@@ -39,19 +39,19 @@ class Router {
                 return segment === segments[index];
             });
         });
-        
+
         if (route) {
             // Extract parameters if any
             const params = {};
             const routeSegments = route.path.split("/").filter(Boolean);
-            
+
             routeSegments.forEach((segment, index) => {
                 if (segment.startsWith(":")) {
                     const paramName = segment.slice(1); // Remove the ":"
                     params[paramName] = segments[index];
                 }
             });
-            
+
             // Pass both app and params to the view
             route.view(app, params);
         } else {
@@ -63,7 +63,7 @@ class Router {
         this.#default = view;
     }
 
-        /**
+    /**
      * Pushes a new route and calls the router
      */
     navigate(path) {

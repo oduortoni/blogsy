@@ -18,7 +18,8 @@ const Home = (app) => {
     `;
 
     // Attach event listener to button after rendering
-    document.getElementById("view-posts").onclick = () => window.router.navigate("/posts");
+    document.getElementById("view-posts").onclick = () =>
+        window.router.navigate("/posts");
 };
 
 export default Home;
