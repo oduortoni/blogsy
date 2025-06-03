@@ -15,7 +15,7 @@ class ApiController extends Controller
             'GET /api' => 'List all available endpoints',
             'GET /api/posts' => 'List all posts',
             'GET /api/posts/{id}' => 'Get a specific post',
-            'POST /api/posts' => 'Create a new post',
+            'POST /api/posts/create' => 'Create a new post',
             'PUT /api/posts/{id}' => 'Update a specific post',
         ];
 

@@ -11,14 +11,15 @@
 
 import "./bootstrap"; // development only for hot reloading
 
-import { Dialog, Home, About, Posts, Post, PostUpdate, PostDelete } from './views/index.js';
+import { Home, About, Posts, Post, PostUpdate, PostDelete, PostCreate } from './views/pages/index.js';
+import { Dialog } from './views/components/index.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     const app = document.getElementById('app');
 
     // Expose globally for convenience
     window.app = app;
-    window.views = { Dialog, Home, About, Posts, Post, PostUpdate, PostDelete };
+    window.views = { Dialog, Home, About, Posts, Post, PostUpdate, PostDelete, PostCreate };
 
     /**
      * Routes the application to the correct view based on the current path
@@ -51,6 +52,11 @@ document.addEventListener('DOMContentLoaded', () => {
         else if (segments[0] === 'posts' && segments[1] === 'edit') {
             const id = segments[2];
             PostUpdate(id);
+        }
+
+        // Create post: /posts/create
+        else if (segments[0] === 'posts' && segments[1] === 'create') {
+            PostCreate(app);
         }
 
         // Fallback

@@ -9,13 +9,13 @@
 * contact: oduortoni@gmail.com
 */
 
-import Home from './home.js';
-import Posts from './posts.js';
-import Post from './post.js';
-import PostUpdate from './post-update.js';
-import PostDelete from './post-delete.js';
-import About from './about.js';
-import Dialog from './dialog.js';
+import Home from './main/home.js';
+import About from './main/about.js';
+import Posts from './posts/posts.js';
+import Post from './posts/post.js';
+import PostUpdate from './posts/post-update.js';
+import PostDelete from './posts/post-delete.js';
+import PostCreate from './posts/post-create.js';
 
 export {
     Home,
@@ -24,5 +24,5 @@ export {
     Post,
     PostDelete,
     PostUpdate,
-    Dialog,
+    PostCreate,
 };

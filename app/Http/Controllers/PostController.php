@@ -41,12 +41,12 @@ class PostController extends Controller
     }
 
     /*
-    * Store a new post
+    * Create a new post
     *
     * @param Request $request
     * @return JsonResponse
     */
-    public function store(Request $request): JsonResponse
+    public function create(Request $request): JsonResponse
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',

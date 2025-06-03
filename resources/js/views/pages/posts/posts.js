@@ -15,6 +15,7 @@ const Posts = async () => {
 
         window.app.innerHTML = `
             <h2>All Posts</h2>
+            <button onclick="window.views.PostCreate()" class="btn btn-primary">Create Post</button>
             <div class="posts">
                 ${
                     result.posts.length > 0 ?
