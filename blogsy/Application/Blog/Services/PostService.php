@@ -11,9 +11,9 @@ declare(strict_types=1);
 
 namespace Blogsy\Application\Blog\Services;
 
-use Blogsy\Application\Blog\Interfaces\PostServiceInterface;
 use Blogsy\Domain\Blog\Entities\Post;
-use Blogsy\Domain\Blog\Interfaces\PostRepositoryInterface;
+use Blogsy\Domain\Blog\Services\PostServiceInterface;
+use Blogsy\Domain\Blog\Repositories\PostRepositoryInterface;
 
 class PostService implements PostServiceInterface
 {
@@ -50,9 +50,9 @@ class PostService implements PostServiceInterface
      * Find a post by id
      *
      * @param int $id
-     * @return Post
+     * @return Post|null
      */
-    public function find(int $id): Post
+    public function find(int $id): ?Post
     {
         $post = $this->repository->find($id);
         if (! $post) {
@@ -68,9 +68,9 @@ class PostService implements PostServiceInterface
      *
      * @param int $id
      * @param array $data
-     * @return Post
+     * @return Post|null
      */
-    public function update(int $id, array $data): Post
+    public function update(int $id, array $data): ?Post
     {
         $this->repository->update($id, $data);
         return $this->repository->find($id);

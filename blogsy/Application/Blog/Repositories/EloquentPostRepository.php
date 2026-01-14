@@ -4,16 +4,16 @@
 * author: @toni
 * date: 2025-06-01
 * description: Eloquent implementation of PostRepositoryInterface
-* file: app/Repositories/EloquentPostRepository.php
+* file: blogsy/Application/Blog/Repositories/EloquentPostRepository.php
 */
 
 declare(strict_types=1);
 
-namespace App\Repositories;
+namespace Blogsy\Application\Blog\Repositories;
 
 use App\Models\Post;
 use Blogsy\Domain\Blog\Entities\Post as DomainPost;
-use Blogsy\Domain\Blog\Interfaces\PostRepositoryInterface;
+use Blogsy\Domain\Blog\Repositories\PostRepositoryInterface;
 
 class EloquentPostRepository implements PostRepositoryInterface
 {
@@ -64,7 +64,6 @@ class EloquentPostRepository implements PostRepositoryInterface
                 'updated_at' => $post->updated_at,
             ];
         })->toArray();
-
         return $posts;
     }
 
@@ -72,24 +71,26 @@ class EloquentPostRepository implements PostRepositoryInterface
      * Find a post by id
      *
      * @param int $id
-     * @return DomainPost
+     * @return DomainPost|null
      */
-    public function find(int $id): DomainPost
+    public function find(int $id): ?DomainPost
     {
         $eloquentPost = Post::find($id);
-        $post = DomainPost::fromArray([
+        if (! $eloquentPost) {
+            return null;
+        }
+
+        return DomainPost::fromArray([
             'id' => $eloquentPost->id,
             'title' => $eloquentPost->title,
             'slug' => $eloquentPost->slug,
             'content' => $eloquentPost->content,
             'is_published' => $eloquentPost->is_published,
-            'views' => $eloquentPost->views ?? 0,
-            'likes' => $eloquentPost->likes ?? 0,
+            'views' => $eloquentPost->views,
+            'likes' => $eloquentPost->likes,
             'created_at' => $eloquentPost->created_at,
             'updated_at' => $eloquentPost->updated_at,
         ]);
-
-        return $post;
     }
 
     /*
@@ -100,11 +101,9 @@ class EloquentPostRepository implements PostRepositoryInterface
      */
     public function incrementViews(int $id): void
     {
-        Post::find($id)->increment('views');
+        Post::where('id', $id)->increment('views');
     }
 
-    /*
-     * Update a post by id
     /*
      * Update a post by id
      *
@@ -115,8 +114,7 @@ class EloquentPostRepository implements PostRepositoryInterface
     public function update(int $id, array $data): void
     {
         $post = Post::find($id);
-        $post->update($data);
-        $post->save();
+        $post?->update($data);
     }
 
     /*
@@ -127,6 +125,6 @@ class EloquentPostRepository implements PostRepositoryInterface
      */
     public function delete(int $id): void
     {
-        Post::find($id)->delete();
+        Post::find($id)?->delete();
     }
 }

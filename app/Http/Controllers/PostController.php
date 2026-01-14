@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use Blogsy\Application\Blog\Interfaces\PostServiceInterface;
+use Blogsy\Domain\Blog\Services\PostServiceInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -34,34 +34,16 @@ class PostController extends Controller
     {
         $posts = $this->service->list();
 
+        if (! $posts) {
+            return response()->json([
+                'message' => 'No posts found',
+            ], 404);
+        }
+
         return response()->json([
             'posts' => $posts,
             'message' => 'Posts fetched successfully',
         ], 200);
-    }
-
-    /*
-    * Create a new post
-    *
-    * @param Request $request
-    * @return JsonResponse
-    */
-    public function create(Request $request): JsonResponse
-    {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'content' => 'required|string',
-            'slug' => 'required|string|unique:posts,slug|max:255',
-            'is_published' => 'sometimes|boolean',
-        ]);
-
-        $this->service->create([
-            ...$validated,
-            'views' => 0,
-            'likes' => 0,
-        ]);
-
-        return response()->json(['message' => 'Post created'], 201);
     }
 
     /*
