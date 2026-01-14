@@ -28,12 +28,12 @@ class PostService implements PostServiceInterface
      * Create a new post
      *
      * @param array $data
-     * @return void
+     * @return Post
      */
-    public function create(array $data): void
+    public function create(array $data): Post
     {
         $post = Post::fromArray($data);
-        $this->repository->save($post);
+        return $this->repository->save($post);
     }
 
     /*
@@ -68,11 +68,12 @@ class PostService implements PostServiceInterface
      *
      * @param int $id
      * @param array $data
-     * @return void
+     * @return Post
      */
-    public function update(int $id, array $data): void
+    public function update(int $id, array $data): Post
     {
         $this->repository->update($id, $data);
+        return $this->repository->find($id);
     }
 
     /*

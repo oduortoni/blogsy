@@ -65,6 +65,30 @@ class PostController extends Controller
     }
 
     /*
+    * store a new post
+    *
+    * @param Request $request
+    * @return JsonResponse
+    */
+    public function store(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'content' => 'required|string',
+            'slug' => 'required|string|unique:posts,slug|max:255',
+            'is_published' => 'sometimes|boolean',
+        ]);
+
+        $post = $this->service->create([
+            ...$validated,
+            'views' => 0,
+            'likes' => 0,
+        ]);
+
+        return response()->json($post, 201);
+    }
+
+    /*
     * Show a post by id
     *
     * @param int $id
@@ -108,9 +132,9 @@ class PostController extends Controller
             ], 404);
         }
 
-        $this->service->update($id, $validated);
+        $updatedPost = $this->service->update($id, $validated);
 
-        return response()->json(['message' => 'Post updated'], 200);
+        return response()->json($updatedPost, 200);
     }
 
     /*

@@ -17,7 +17,7 @@ interface PostRepositoryInterface
 {
     public function list(): array;
 
-    public function save(Post $post): void;
+    public function save(Post $post): Post;
 
     public function find(int $id): Post;
 

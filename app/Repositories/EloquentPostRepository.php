@@ -21,17 +21,29 @@ class EloquentPostRepository implements PostRepositoryInterface
      * Save a post
      *
      * @param DomainPost $post
-     * @return void
+     * @return DomainPost
      */
-    public function save(DomainPost $post): void
+    public function save(DomainPost $post): DomainPost
     {
-        Post::create([
+        $created = Post::create([
             'title' => $post->title,
             'content' => $post->content,
             'slug' => $post->slug,
             'is_published' => $post->is_published,
             'views' => $post->views,
             'likes' => $post->likes,
+        ]);
+
+        return DomainPost::fromArray([
+            'id' => $created->id,
+            'title' => $created->title,
+            'slug' => $created->slug,
+            'content' => $created->content,
+            'is_published' => $created->is_published,
+            'views' => $created->views,
+            'likes' => $created->likes,
+            'created_at' => $created->created_at,
+            'updated_at' => $created->updated_at,
         ]);
     }
 

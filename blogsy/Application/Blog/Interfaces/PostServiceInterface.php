@@ -11,7 +11,9 @@ declare(strict_types=1);
 
 namespace Blogsy\Application\Blog\Interfaces;
 
+use Blogsy\Domain\Blog\Entities\Post;
+
 interface PostServiceInterface
 {
-    public function create(array $data): void;
+    public function create(array $data): Post;
 }
