@@ -96,7 +96,7 @@ class PostController extends Controller
         $validated = $request->validate([
             'title' => 'nullable|string|max:255',
             'content' => 'nullable|string',
-            'slug' => 'nullable|string|unique:posts,slug|max:255',
+            'slug' => 'nullable|string|max:255|unique:posts,slug,'.$id,
             'is_published' => 'sometimes|boolean',
         ]);
 

@@ -12,6 +12,7 @@ class Post extends Model
         'content',
         'slug',
         'is_published',
+        'published_at',
         'views',
         'likes',
     ];

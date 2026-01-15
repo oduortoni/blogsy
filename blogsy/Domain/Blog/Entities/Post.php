@@ -21,6 +21,7 @@ class Post
         public bool $is_published,
         public int $views,
         public int $likes,
+        public ?string $published_at,
         public string $created_at,
         public string $updated_at,
     ) {}
@@ -40,6 +41,7 @@ class Post
             $data['is_published'] ?? false,
             $data['views'] ?? 0,
             $data['likes'] ?? 0,
+            $data['published_at'] ?? null,
             $data['created_at'] ?? $now,
             $data['updated_at'] ?? $now
         );

@@ -25,14 +25,20 @@ class EloquentPostRepository implements PostRepositoryInterface
      */
     public function save(DomainPost $post): DomainPost
     {
-        $created = Post::create([
+        $data = [
             'title' => $post->title,
             'content' => $post->content,
             'slug' => $post->slug,
             'is_published' => $post->is_published,
             'views' => $post->views,
             'likes' => $post->likes,
-        ]);
+        ];
+
+        if ($post->is_published) {
+            $data['published_at'] = now();
+        }
+
+        $created = Post::create($data);
 
         return DomainPost::fromArray([
             'id' => $created->id,
@@ -60,6 +66,10 @@ class EloquentPostRepository implements PostRepositoryInterface
                 'title' => $post->title,
                 'slug' => $post->slug,
                 'content' => substr($post->content, 0, 100).'...',
+                'is_published' => $post->is_published,
+                'views' => $post->views,
+                'likes' => $post->likes,
+                'published_at' => $post->published_at,
                 'created_at' => $post->created_at,
                 'updated_at' => $post->updated_at,
             ];
@@ -88,6 +98,7 @@ class EloquentPostRepository implements PostRepositoryInterface
             'is_published' => $eloquentPost->is_published,
             'views' => $eloquentPost->views,
             'likes' => $eloquentPost->likes,
+            'published_at' => $eloquentPost->published_at,
             'created_at' => $eloquentPost->created_at,
             'updated_at' => $eloquentPost->updated_at,
         ]);
@@ -114,7 +125,16 @@ class EloquentPostRepository implements PostRepositoryInterface
     public function update(int $id, array $data): void
     {
         $post = Post::find($id);
-        $post?->update($data);
+        if (!$post) return;
+
+        $wasUnpublished = !$post->is_published;
+        $nowPublished = $data['is_published'] ?? false;
+
+        if ($wasUnpublished && $nowPublished && !$post->published_at) {
+            $data['published_at'] = now();
+        }
+
+        $post->update($data);
     }
 
     /*

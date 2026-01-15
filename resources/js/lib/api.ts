@@ -24,6 +24,7 @@ interface Post {
     is_published: boolean;
     views: number;
     likes: number;
+    published_at: string | null;
     created_at: string;
     updated_at: string;
 }

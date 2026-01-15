@@ -23,21 +23,25 @@ const PostView = async (app: HTMLElement, params: { id: string }): Promise<void>
 };
 
 const renderPost = (post: Post): string => {
+    const publishedDate = post.published_at 
+        ? new Date(post.published_at).toLocaleDateString()
+        : 'Not published';
+    
     return `
         <article class="post-detail">
+            <div class="post-actions" style="display: flex; justify-content: flex-end; gap: 0.5rem;">
+                <button class="btn btn-back" onclick="window.router.navigate('/posts')" title="Back">←</button>
+                <button class="btn btn-edit" onclick="window.router.navigate('/posts/edit/${post.id}')" title="Edit">✎</button>
+                <button class="btn btn-delete" onclick="window.router.navigate('/posts/delete/${post.id}')" title="Delete">🗑</button>
+            </div>
             <h2>${post.title}</h2>
             <p class="meta">
                 <strong>Views:</strong> ${post.views || 0} |
                 <strong>Likes:</strong> ${post.likes || 0} |
-                <strong>Published:</strong> ${new Date(post.created_at).toLocaleDateString()}
+                <strong>Published:</strong> ${publishedDate}
             </p>
             <div class="content">
                 ${post.content}
-            </div>
-            <div class="post-actions">
-                <button class="btn btn-back" onclick="window.router.navigate('/posts')" title="Back to Posts">←</button>
-                <button class="btn btn-edit" onclick="window.router.navigate('/posts/edit/${post.id}')" title="Edit Post">✎</button>
-                <button class="btn btn-delete" onclick="window.router.navigate('/posts/delete/${post.id}')" title="Delete Post">✕</button>
             </div>
         </article>
     `;
