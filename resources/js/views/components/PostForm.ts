@@ -24,8 +24,19 @@ export const PostForm = ({
     submitText = 'Submit' 
 }: PostFormConfig): string => {
     const formId = 'post-form';
-    let contentBlocks: ContentBlock[] = post?.content || [{ type: 'text', content: '' }];
-    let featuredImageUrl = post?.featured_image || '';
+    const formStateKey = `form-state-${formId}`;
+    
+    // Retrieve or initialize state
+    if (!(window as any)[formStateKey]) {
+        (window as any)[formStateKey] = {
+            contentBlocks: post?.content || [{ type: 'text', content: '' }],
+            featuredImageUrl: post?.featured_image || ''
+        };
+    }
+    
+    const state = (window as any)[formStateKey];
+    let contentBlocks = state.contentBlocks;
+    let featuredImageUrl = state.featuredImageUrl;
     
     setTimeout(() => {
         const form = document.getElementById(formId) as HTMLFormElement;
@@ -50,6 +61,7 @@ export const PostForm = ({
                     const result = await api.uploadImage(featuredInput.files[0]);
                     if (result.success && result.data) {
                         featuredImageUrl = result.data.url;
+                        state.featuredImageUrl = result.data.url;
                         const preview = form.querySelector('.featured-preview') as HTMLElement;
                         preview.innerHTML = `<img src="${result.data.url}" alt="Featured" />`;
                         form.querySelector('.featured-actions')!.innerHTML = `
@@ -67,6 +79,7 @@ export const PostForm = ({
                 }
                 if (target.classList.contains('btn-delete-featured')) {
                     featuredImageUrl = '';
+                    state.featuredImageUrl = '';
                     const preview = form.querySelector('.featured-preview') as HTMLElement;
                     preview.innerHTML = '<p>No featured image</p>';
                     form.querySelector('.featured-actions')!.innerHTML = '<button type="button" class="btn-upload-featured">Upload</button>';

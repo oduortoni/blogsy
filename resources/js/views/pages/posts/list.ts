@@ -20,17 +20,38 @@ const Posts = async (app: HTMLElement): Promise<void> => {
     }
 
     const posts = result.data || [];
+    const featuredResult = await api.getFeaturedPosts();
+    const featuredIds = featuredResult.success && featuredResult.data ? featuredResult.data.map((p: any) => p.id) : [];
+    
+    const postsWithFeatured = posts.map(p => ({ ...p, is_featured: featuredIds.includes(p.id) }));
+    
+    const handleFeatureToggle = async (id: number, isFeatured: boolean) => {
+        if (isFeatured) {
+            await api.unfeaturePost(id);
+        } else {
+            await api.featurePost(id);
+        }
+        const idx = postsWithFeatured.findIndex(p => p.id === id);
+        if (idx !== -1) {
+            postsWithFeatured[idx].is_featured = !isFeatured;
+        }
+        render();
+    };
 
-    app.innerHTML = `
-        <h2>Posts <button onclick="window.router.navigate('/posts/create')" class="create-btn" title="Create New Post">+</button></h2>
-        <div class="posts">
-            ${
-                posts.length > 0
-                    ? posts.map(post => PostCard(post, (id) => window.router.navigate(`/posts/post/${id}`))).join('')
-                    : EmptyState('No posts found.')
-            }
-        </div>
-    `;
+    const render = () => {
+        app.innerHTML = `
+            <h2>BLOG<br>NEWS<button onclick="window.router.navigate('/posts/create')" class="create-btn" title="Create New Post">+</button></h2>
+            <div class="posts">
+                ${
+                    postsWithFeatured.length > 0
+                        ? postsWithFeatured.map(post => PostCard(post, (id) => window.router.navigate(`/posts/post/${id}`), handleFeatureToggle)).join('')
+                        : EmptyState('No posts found.')
+                }
+            </div>
+        `;
+    };
+    
+    render();
 };
 
 export default Posts;

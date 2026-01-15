@@ -29,6 +29,7 @@ class EloquentPostRepository implements PostRepositoryInterface
             'title' => $post->title,
             'content' => $post->content,
             'slug' => $post->slug,
+            'featured_image' => $post->featured_image,
             'is_published' => $post->is_published,
             'views' => $post->views,
             'likes' => $post->likes,
@@ -45,6 +46,7 @@ class EloquentPostRepository implements PostRepositoryInterface
             'title' => $created->title,
             'slug' => $created->slug,
             'content' => $created->content,
+            'featured_image' => $created->featured_image,
             'is_published' => $created->is_published,
             'views' => $created->views,
             'likes' => $created->likes,
@@ -158,5 +160,53 @@ class EloquentPostRepository implements PostRepositoryInterface
     public function delete(int $id): void
     {
         Post::find($id)?->delete();
+    }
+
+    /*
+     * Get featured posts
+     *
+     * @return array
+     */
+    public function getFeatured(): array
+    {
+        $posts = Post::whereHas('featured')->get()->map(function ($post) {
+            return [
+                'id' => $post->id,
+                'title' => $post->title,
+                'slug' => $post->slug,
+                'content' => is_array($post->content) ? (collect($post->content)->first(fn($b) => isset($b['content']))['content'] ?? '') : $post->content,
+                'featured_image' => $post->featured_image,
+                'is_published' => $post->is_published,
+                'views' => $post->views,
+                'likes' => $post->likes,
+                'published_at' => $post->published_at,
+            ];
+        })->toArray();
+        return $posts;
+    }
+
+    /*
+     * Feature a post
+     *
+     * @param int $id
+     * @return void
+     */
+    public function feature(int $id): void
+    {
+        $post = Post::find($id);
+        if ($post && !$post->featured()->exists()) {
+            $post->featured()->create([]);
+        }
+    }
+
+    /*
+     * Unfeature a post
+     *
+     * @param int $id
+     * @return void
+     */
+    public function unfeature(int $id): void
+    {
+        Post::find($id)?->featured()->delete();
     }
 }

@@ -120,4 +120,39 @@ class PostController extends Controller
 
         return $this->success(null, 'Post deleted successfully');
     }
+
+    /*
+    * Get featured posts
+    *
+    * @return JsonResponse
+    */
+    public function featured(): JsonResponse
+    {
+        $posts = $this->service->getFeatured();
+        return $this->success($posts, 'Featured posts fetched successfully');
+    }
+
+    /*
+    * Feature a post
+    *
+    * @param int $id
+    * @return JsonResponse
+    */
+    public function feature(int $id): JsonResponse
+    {
+        $this->service->feature($id);
+        return $this->success(null, 'Post featured successfully');
+    }
+
+    /*
+    * Unfeature a post
+    *
+    * @param int $id
+    * @return JsonResponse
+    */
+    public function unfeature(int $id): JsonResponse
+    {
+        $this->service->unfeature($id);
+        return $this->success(null, 'Post unfeatured successfully');
+    }
 }

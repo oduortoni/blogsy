@@ -46,6 +46,7 @@ const renderPost = (post: Post): string => {
     };
     
     return `
+        <h2>${post.title}</h2>
         <article class="post-detail">
             <div class="post-actions" style="display: flex; justify-content: flex-end; gap: 0.5rem;">
                 <button class="btn btn-back" onclick="window.router.navigate('/posts')" title="Back">←</button>

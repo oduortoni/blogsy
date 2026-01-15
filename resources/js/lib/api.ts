@@ -105,6 +105,18 @@ class ApiService {
     deleteImage(id: number): Promise<ApiResponse<null>> {
         return this.request<null>('DELETE', `/images/${id}`);
     }
+
+    getFeaturedPosts(): Promise<ApiResponse<Post[]>> {
+        return this.request<Post[]>('GET', '/posts/featured');
+    }
+
+    featurePost(id: number): Promise<ApiResponse<null>> {
+        return this.request<null>('POST', `/posts/${id}/feature`);
+    }
+
+    unfeaturePost(id: number): Promise<ApiResponse<null>> {
+        return this.request<null>('DELETE', `/posts/${id}/feature`);
+    }
 }
 
 export default new ApiService();

@@ -86,4 +86,36 @@ class PostService implements PostServiceInterface
     {
         $this->repository->delete($id);
     }
+
+    /*
+     * Get featured posts
+     *
+     * @return array
+     */
+    public function getFeatured(): array
+    {
+        return $this->repository->getFeatured();
+    }
+
+    /*
+     * Feature a post
+     *
+     * @param int $id
+     * @return void
+     */
+    public function feature(int $id): void
+    {
+        $this->repository->feature($id);
+    }
+
+    /*
+     * Unfeature a post
+     *
+     * @param int $id
+     * @return void
+     */
+    public function unfeature(int $id): void
+    {
+        $this->repository->unfeature($id);
+    }
 }

@@ -26,4 +26,10 @@ interface PostRepositoryInterface
     public function update(int $id, array $data): void;
 
     public function delete(int $id): void;
+
+    public function getFeatured(): array;
+
+    public function feature(int $id): void;
+
+    public function unfeature(int $id): void;
 }
