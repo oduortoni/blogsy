@@ -5,6 +5,8 @@
     "scripts": {
         "build": "vite build",
         "dev": "vite",
+        "lint": "eslint resources/js",
+        "type-check": "tsc --noEmit",
         "setup-formatting": "npm install --save-dev prettier @prettier/plugin-php prettier-plugin-blade && composer require laravel/pint --dev",
         "clean": "npm run format && ./vendor/bin/pint",
         "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",
@@ -14,11 +16,16 @@
     },
     "devDependencies": {
         "@prettier/plugin-php": "^0.22.4",
-        "axios": "^1.8.2",
+        "@types/node": "^25.0.8",
+        "@typescript-eslint/eslint-plugin": "^8.53.0",
+        "@typescript-eslint/parser": "^8.53.0",
+        "axios": "^1.13.2",
         "concurrently": "^9.0.1",
+        "eslint": "^9.39.2",
         "laravel-vite-plugin": "^1.2.0",
         "prettier": "^3.5.3",
         "prettier-plugin-blade": "^2.1.21",
+        "typescript": "^5.9.3",
         "vite": "^6.2.4"
     }
 }

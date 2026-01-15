@@ -8,60 +8,39 @@
  * contact: oduortoni@gmail.com
  */
 
-// Render form and attach event
+import api from '../../../lib/api.js';
+import { PostForm } from '../../components/PostForm.js';
+import Dialog from '../../components/dialog.js';
+
 const PostCreate = (app, params) => {
-    app.innerHTML = `
-        <form id="create-post-form" class="post-form">
-            <input type="text" name="title" placeholder="Title" required />
-            <textarea name="content" placeholder="Content" required></textarea>
-            <button type="submit">Create Post</button>
-        </form>
-    `;
+    let errors = null;
 
-    document.getElementById("create-post-form").onsubmit = async (e) => {
-        e.preventDefault();
+    const render = () => {
+        app.innerHTML = `
+            <h2>Create New Post</h2>
+            ${PostForm({
+                onSubmit: handleSubmit,
+                errors,
+                submitText: 'Create Post'
+            })}
+        `;
+    };
 
-        const title = document
-            .querySelector('input[name="title"]')
-            .value.trim();
-        const content = document
-            .querySelector('textarea[name="content"]')
-            .value.trim();
+    const handleSubmit = async (data) => {
+        const result = await api.createPost(data);
 
-        if (!title || !content) {
-            window.views.Dialog(
-                "Validation Error",
-                "Both title and content are required.",
-            );
+        if (!result.success) {
+            errors = result.errors;
+            render();
             return;
         }
 
-        try {
-            const data = await createPost(title, content);
-            window.views.Dialog("Success", "Post created successfully!", () => {
-                window.router.navigate("/posts");
-            });
-        } catch {
-            window.views.Dialog("Error", "Failed to create post.");
-        }
-    };
-};
-
-// Submit post to backend
-const createPost = async (title, content) => {
-    try {
-        const response = await axios.post("/api/posts/create", {
-            title,
-            content,
-            slug: title.toLowerCase().replace(/\s+/g, "-"),
-            is_published: true,
+        Dialog('Success', result.message, () => {
+            window.router.navigate('/posts');
         });
-        console.info("Post created:", response.data);
-        return response.data;
-    } catch (error) {
-        console.error("Failed to create post:", error);
-        throw error;
-    }
+    };
+
+    render();
 };
 
 export default PostCreate;

@@ -1,31 +1,28 @@
 /*
- * file: blogsy/resources/js/views/post.js
- * description: This file is used to render the post view.
+ * file: blogsy/resources/js/views/pages/posts/view.ts
+ * description: Single post view page
  * author: toni
- * date: 2025-06-02
- * version: 1.0.0
- * license: MIT
- * copyright: 2025 toni
- * contact: oduortoni@gmail.com
+ * date: 2026-01-14
  */
 
-import api from '../../../lib/api.js';
-import { Loading, ErrorMessage } from '../../components/ui.js';
+import api from '../../../lib/api';
+import { Loading, ErrorMessage } from '../../components/ui';
+import type { Post } from '../../../lib/api';
 
-const Post = async (app, params) => {
+const PostView = async (app: HTMLElement, params: { id: string }): Promise<void> => {
     app.innerHTML = Loading('Loading post...');
     
-    const result = await api.getPost(params.id);
+    const result = await api.getPost(parseInt(params.id));
 
-    if (!result.success) {
-        app.innerHTML = ErrorMessage(result.message);
+    if (!result.success || !result.data) {
+        app.innerHTML = ErrorMessage(result.message || 'Post not found');
         return;
     }
 
-    app.innerHTML = PostView(result.data);
+    app.innerHTML = renderPost(result.data);
 };
 
-const PostView = (post) => {
+const renderPost = (post: Post): string => {
     return `
         <article class="post-detail">
             <h2>${post.title}</h2>
@@ -46,4 +43,4 @@ const PostView = (post) => {
     `;
 };
 
-export default Post;
+export default PostView;

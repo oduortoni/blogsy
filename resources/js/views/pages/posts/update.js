@@ -9,72 +9,51 @@
  * contact: oduortoni@gmail.com
  */
 
-// Load post and render form
+import api from '../../../lib/api.js';
+import { PostForm } from '../../components/PostForm.js';
+import { Loading, ErrorMessage } from '../../components/ui.js';
+import Dialog from '../../components/dialog.js';
+
 const PostUpdate = async (app, params) => {
-    try {
-        const { data } = await axios.get(`/api/posts/${params.id}`);
-        const post = data.post;
+    app.innerHTML = Loading('Loading post...');
+    
+    const result = await api.getPost(params.id);
 
-        // Render form
+    if (!result.success) {
+        app.innerHTML = ErrorMessage(result.message);
+        return;
+    }
+
+    let errors = null;
+    const post = result.data;
+
+    const render = () => {
         app.innerHTML = `
-            <form id="update-post-form" class="post-form">
-                <input type="text" name="title" placeholder="Title" value="${post.title}" required />
-                <textarea name="content" placeholder="Content" required>${post.content}</textarea>
-                <button type="submit">Update</button>
-            </form>
+            <h2>Edit Post</h2>
+            ${PostForm({
+                post,
+                onSubmit: handleSubmit,
+                errors,
+                submitText: 'Update Post'
+            })}
         `;
+    };
 
-        // Attach submit event
-        document.getElementById("update-post-form").onsubmit = async (e) => {
-            e.preventDefault();
+    const handleSubmit = async (data) => {
+        const updateResult = await api.updatePost(params.id, data);
 
-            const title = document
-                .querySelector('input[name="title"]')
-                .value.trim();
-            const content = document
-                .querySelector('textarea[name="content"]')
-                .value.trim();
+        if (!updateResult.success) {
+            errors = updateResult.errors;
+            render();
+            return;
+        }
 
-            if (!title || !content) {
-                window.views.Dialog(
-                    "Validation Error",
-                    "Both title and content are required.",
-                );
-                return;
-            }
-
-            try {
-                await updatePost(post.id, title, content);
-                window.views.Dialog(
-                    "Success",
-                    "Post updated successfully!",
-                    () => {
-                        window.router.navigate(`/posts/post/${post.id}`);
-                    },
-                );
-            } catch {
-                window.views.Dialog("Error", "Failed to update post.");
-            }
-        };
-    } catch (error) {
-        console.error("Failed to load post for editing:", error);
-        app.innerHTML = `<p>Could not load post for editing.</p>`;
-    }
-};
-
-// Update a post via API
-const updatePost = async (id, title, content) => {
-    try {
-        const response = await axios.post(`/api/posts/update/${id}`, {
-            title,
-            content,
+        Dialog('Success', updateResult.message, () => {
+            window.router.navigate(`/posts/post/${params.id}`);
         });
-        console.info("Post updated:", response.data);
-        return response.data;
-    } catch (error) {
-        console.error("Failed to update post:", error);
-        throw error;
-    }
+    };
+
+    render();
 };
 
 export default PostUpdate;

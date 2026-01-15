@@ -12,3 +12,6 @@
 import Dialog from "./dialog.js";
 
 export { Dialog };
+export { PostCard } from './PostCard.js';
+export { PostForm } from './PostForm.js';
+export * from './ui.js';

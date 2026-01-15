@@ -1,29 +1,25 @@
 /*
  * author: toni
- * date: 2025-06-02
- * version: 1.0.0
- * license: MIT
- * copyright: 2025 toni
- * contact: oduortoni@gmail.com
- * file: blogsy/resources/js/views/posts.js
- * description: This file is used to render the list of posts.
+ * date: 2026-01-14
+ * file: blogsy/resources/js/views/pages/posts/list.ts
+ * description: Posts list page
  */
 
-import api from '../../../lib/api.js';
-import { PostCard } from '../../components/PostCard.js';
-import { Loading, ErrorMessage, EmptyState } from '../../components/ui.js';
+import api from '../../../lib/api';
+import { PostCard } from '../../components/PostCard';
+import { Loading, ErrorMessage, EmptyState } from '../../components/ui';
 
-const Posts = async (app, params) => {
+const Posts = async (app: HTMLElement): Promise<void> => {
     app.innerHTML = Loading('Loading posts...');
     
     const result = await api.getPosts();
 
     if (!result.success) {
-        app.innerHTML = ErrorMessage(result.message);
+        app.innerHTML = ErrorMessage(result.message || 'Failed to load posts');
         return;
     }
 
-    const posts = result.data;
+    const posts = result.data || [];
 
     app.innerHTML = `
         <h2>Posts <button onclick="window.router.navigate('/posts/create')" class="create-btn" title="Create New Post">+</button></h2>

@@ -9,29 +9,28 @@
  * contact: oduortoni@gmail.com
  */
 
-const PostDelete = async (app, params) => {
-    window.views.Dialog(
-        "Delete Post",
-        "Are you sure you want to delete this post?",
-        async () => {
-            try {
-                const response = await axios.delete(
-                    `/api/posts/delete/${params.id}`,
-                );
-                console.info("Post deleted:", response.data);
+import api from '../../../lib/api.js';
+import Dialog from '../../components/dialog.js';
 
-                window.views.Dialog(
-                    "Deleted",
-                    "Post deleted successfully.",
-                    () => {
-                        window.router.navigate("/posts");
-                    },
-                );
-            } catch (error) {
-                console.error("Failed to delete post:", error);
-                window.views.Dialog("Error", "Failed to delete post.");
+const PostDelete = async (app, params) => {
+    Dialog(
+        'Delete Post',
+        'Are you sure you want to delete this post?',
+        async () => {
+            const result = await api.deletePost(params.id);
+
+            if (!result.success) {
+                Dialog('Error', result.message);
+                return;
             }
+
+            Dialog('Success', result.message, () => {
+                window.router.navigate('/posts');
+            });
         },
+        () => {
+            window.router.navigate('/posts');
+        }
     );
 };
 
