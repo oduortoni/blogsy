@@ -11,13 +11,16 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use Blogsy\Application\Blog\Interfaces\PostServiceInterface;
+use App\Http\Responses\ApiResponse;
+use Blogsy\Domain\Blog\Services\PostServiceInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
 class PostController extends Controller
 {
+    use ApiResponse;
+
     protected $service;
 
     public function __construct(PostServiceInterface $service)
@@ -34,34 +37,11 @@ class PostController extends Controller
     {
         $posts = $this->service->list();
 
-        return response()->json([
-            'posts' => $posts,
-            'message' => 'Posts fetched successfully',
-        ], 200);
-    }
+        if (! $posts) {
+            return $this->error('No posts found', null, 404);
+        }
 
-    /*
-    * Create a new post
-    *
-    * @param Request $request
-    * @return JsonResponse
-    */
-    public function create(Request $request): JsonResponse
-    {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'content' => 'required|string',
-            'slug' => 'required|string|unique:posts,slug|max:255',
-            'is_published' => 'sometimes|boolean',
-        ]);
-
-        $this->service->create([
-            ...$validated,
-            'views' => 0,
-            'likes' => 0,
-        ]);
-
-        return response()->json(['message' => 'Post created'], 201);
+        return $this->success($posts, 'Posts fetched successfully');
     }
 
     /*
@@ -85,7 +65,7 @@ class PostController extends Controller
             'likes' => 0,
         ]);
 
-        return response()->json($post, 201);
+        return $this->success($post, 'Post created successfully', 201);
     }
 
     /*
@@ -98,15 +78,10 @@ class PostController extends Controller
     {
         $post = $this->service->find($id);
         if (! $post) {
-            return response()->json([
-                'message' => 'Post not found',
-            ], 404);
+            return $this->error('Post not found', null, 404);
         }
 
-        return response()->json([
-            'post' => $post,
-            'message' => 'Post fetched successfully',
-        ], 200);
+        return $this->success($post, 'Post fetched successfully');
     }
 
     /*
@@ -127,14 +102,12 @@ class PostController extends Controller
 
         $post = $this->service->find($id);
         if (! $post) {
-            return response()->json([
-                'message' => 'Post not found',
-            ], 404);
+            return $this->error('Post not found', null, 404);
         }
 
         $updatedPost = $this->service->update($id, $validated);
 
-        return response()->json($updatedPost, 200);
+        return $this->success($updatedPost, 'Post updated successfully');
     }
 
     /*
@@ -147,6 +120,6 @@ class PostController extends Controller
     {
         $this->service->delete($id);
 
-        return response()->json(['message' => 'Post deleted'], 200);
+        return $this->success(null, 'Post deleted successfully');
     }
 }
