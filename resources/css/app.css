@@ -21,6 +21,12 @@ body {
   color: #111;
 }
 
+@media (min-width: 901px) {
+  body {
+    overflow: hidden;
+  }
+}
+
 * {
   box-sizing: border-box;
 }
@@ -87,7 +93,13 @@ nav ul li:hover {
   letter-spacing: -0.02em;
   display: flex;
   align-items: flex-start;
+  justify-content: space-between;
   flex-direction: column;
+}
+
+#app > h2 .create-btn {
+  align-self: flex-end;
+  margin: 0;
 }
 
 /* Right Scrolling Column */
@@ -521,18 +533,9 @@ footer {
 .home-container {
   max-width: 1600px;
   margin: 0 auto;
-  padding: 4rem 5rem;
+  padding: 2rem 5rem;
   height: calc(100vh - var(--nav-height));
-  overflow-y: auto;
-}
-
-.home-container::-webkit-scrollbar {
-  display: none;
-}
-
-.home-container {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+  overflow: hidden;
 }
 
 /* Featured Section - Editorial Layout 65/35 */
@@ -547,15 +550,17 @@ footer {
 .featured-left {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  height: 100%;
+  overflow: hidden;
 }
 
 .featured-left h1 {
   font-size: clamp(3.5rem, 6vw, 6rem);
-  margin: 0 0 3rem 0;
+  margin: 0 0 2rem 0;
   letter-spacing: -0.03em;
   line-height: 0.95;
   font-weight: 700;
+  flex-shrink: 0;
 }
 
 .featured-hero {
@@ -564,8 +569,8 @@ footer {
   border-radius: 28px;
   overflow: hidden;
   background: #ccc;
-  min-height: 550px;
   cursor: pointer;
+  min-height: 0;
 }
 
 .featured-hero img {
@@ -619,6 +624,8 @@ footer {
 .featured-right {
   display: flex;
   flex-direction: column;
+  height: 100%;
+  overflow: hidden;
 }
 
 .featured-right h2 {
@@ -626,6 +633,7 @@ footer {
   margin: 0 0 2rem 0;
   letter-spacing: -0.02em;
   font-weight: 700;
+  flex-shrink: 0;
 }
 
 .featured-picks {
@@ -635,6 +643,7 @@ footer {
   overflow-y: auto;
   padding-right: 0.5rem;
   align-content: start;
+  min-height: 0;
 }
 
 .featured-picks::-webkit-scrollbar {
@@ -704,34 +713,83 @@ footer {
 /* Responsive */
 @media (max-width: 1100px) {
   .home-container {
-    padding: 2rem;
+    padding: 0;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
   }
 
   .home-featured {
     grid-template-columns: 1fr;
+    height: 100%;
+    gap: 0;
+    display: flex;
+    flex-direction: column;
   }
 
   .featured-left {
-    min-height: auto;
+    height: 60%;
+    overflow: hidden;
+    padding: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .featured-left h1 {
+    display: none;
   }
 
   .featured-hero {
-    min-height: 350px;
+    width: 100%;
+    max-width: 600px;
+    height: 100%;
+    min-height: 0;
   }
 
   .featured-right {
-    max-height: 400px;
+    height: 40%;
+    overflow: hidden;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .featured-right h2 {
+    margin-bottom: 1rem;
+  }
+
+  .featured-picks {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    overflow-y: visible;
+    gap: 1.5rem;
+    padding-bottom: 1rem;
+    width: 100%;
+    max-width: 800px;
+  }
+
+  .featured-picks::-webkit-scrollbar {
+    display: none;
+  }
+
+  .pick-card {
+    min-width: 280px;
+    flex-shrink: 0;
   }
 
   .hero-content {
     bottom: 1.5rem;
     left: 1.5rem;
     right: 1.5rem;
-    padding: 1rem 1.5rem;
+    padding: 1.5rem 2rem;
   }
 
   .hero-content h3 {
-    font-size: 1.3rem;
+    font-size: 1.5rem;
   }
 }
 
@@ -826,21 +884,25 @@ footer {
   }
 
   #app {
-    grid-template-columns: 1fr;
+    display: block !important;
     height: auto;
+  }
+
+  #app:not(:has(.home-container)) {
+    display: block !important;
   }
 
   #app > h2 {
     position: static;
     height: auto;
-    padding: 2rem;
+    padding: 2rem 1.5rem 1rem;
     font-size: 3rem;
   }
 
   .posts {
     height: auto;
     overflow: visible;
-    padding: 2rem;
+    padding: 1.5rem;
   }
 
   .post {
@@ -851,8 +913,14 @@ footer {
     aspect-ratio: 16 / 9;
   }
 
-  .post-detail, .post-form {
-    padding: 2rem;
+  .post-detail {
+    padding: 1.5rem;
+    height: auto;
+    overflow: visible;
+  }
+
+  .post-form {
+    padding: 1.5rem;
     height: auto;
     overflow: visible;
   }

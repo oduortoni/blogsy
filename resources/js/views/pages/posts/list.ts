@@ -40,7 +40,7 @@ const Posts = async (app: HTMLElement): Promise<void> => {
 
     const render = () => {
         app.innerHTML = `
-            <h2>BLOG<br>NEWS<button onclick="window.router.navigate('/posts/create')" class="create-btn" title="Create New Post">+</button></h2>
+            <h2>POSTS<button onclick="window.router.navigate('/posts/create')" class="create-btn" title="Create New Post">+</button></h2>
             <div class="posts">
                 ${
                     postsWithFeatured.length > 0

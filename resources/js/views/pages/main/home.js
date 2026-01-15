@@ -35,7 +35,7 @@ const Home = async (app) => {
                     <div class="featured-right">
                         <h2>Top picks</h2>
                         <div class="featured-picks" id="featured-picks">
-                            ${featured.slice(1, 10).map(post => `
+                            ${featured.map(post => `
                                 <article class="pick-card" 
                                     data-img="${post.featured_image || 'https://picsum.photos/200/200'}" 
                                     data-tag="Featured" 
