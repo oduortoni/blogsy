@@ -25,20 +25,28 @@ class EloquentPostRepository implements PostRepositoryInterface
      */
     public function save(DomainPost $post): DomainPost
     {
-        $created = Post::create([
+        $data = [
             'title' => $post->title,
             'content' => $post->content,
             'slug' => $post->slug,
+            'featured_image' => $post->featured_image,
             'is_published' => $post->is_published,
             'views' => $post->views,
             'likes' => $post->likes,
-        ]);
+        ];
+
+        if ($post->is_published) {
+            $data['published_at'] = now();
+        }
+
+        $created = Post::create($data);
 
         return DomainPost::fromArray([
             'id' => $created->id,
             'title' => $created->title,
             'slug' => $created->slug,
             'content' => $created->content,
+            'featured_image' => $created->featured_image,
             'is_published' => $created->is_published,
             'views' => $created->views,
             'likes' => $created->likes,
@@ -55,11 +63,26 @@ class EloquentPostRepository implements PostRepositoryInterface
     public function list(): array
     {
         $posts = Post::all()->map(function ($post) {
+            $content = $post->content;
+            $preview = '';
+            
+            if (is_array($content)) {
+                $textBlock = collect($content)->first(fn($b) => isset($b['content']));
+                $preview = $textBlock['content'] ?? '';
+            } else {
+                $preview = $content ?? '';
+            }
+            
             return [
                 'id' => $post->id,
                 'title' => $post->title,
                 'slug' => $post->slug,
-                'content' => substr($post->content, 0, 100).'...',
+                'content' => substr($preview, 0, 100).'...',
+                'featured_image' => $post->featured_image,
+                'is_published' => $post->is_published,
+                'views' => $post->views,
+                'likes' => $post->likes,
+                'published_at' => $post->published_at,
                 'created_at' => $post->created_at,
                 'updated_at' => $post->updated_at,
             ];
@@ -85,9 +108,11 @@ class EloquentPostRepository implements PostRepositoryInterface
             'title' => $eloquentPost->title,
             'slug' => $eloquentPost->slug,
             'content' => $eloquentPost->content,
+            'featured_image' => $eloquentPost->featured_image,
             'is_published' => $eloquentPost->is_published,
             'views' => $eloquentPost->views,
             'likes' => $eloquentPost->likes,
+            'published_at' => $eloquentPost->published_at,
             'created_at' => $eloquentPost->created_at,
             'updated_at' => $eloquentPost->updated_at,
         ]);
@@ -114,7 +139,16 @@ class EloquentPostRepository implements PostRepositoryInterface
     public function update(int $id, array $data): void
     {
         $post = Post::find($id);
-        $post?->update($data);
+        if (!$post) return;
+
+        $wasUnpublished = !$post->is_published;
+        $nowPublished = $data['is_published'] ?? false;
+
+        if ($wasUnpublished && $nowPublished && !$post->published_at) {
+            $data['published_at'] = now();
+        }
+
+        $post->update($data);
     }
 
     /*
@@ -126,5 +160,53 @@ class EloquentPostRepository implements PostRepositoryInterface
     public function delete(int $id): void
     {
         Post::find($id)?->delete();
+    }
+
+    /*
+     * Get featured posts
+     *
+     * @return array
+     */
+    public function getFeatured(): array
+    {
+        $posts = Post::whereHas('featured')->get()->map(function ($post) {
+            return [
+                'id' => $post->id,
+                'title' => $post->title,
+                'slug' => $post->slug,
+                'content' => is_array($post->content) ? (collect($post->content)->first(fn($b) => isset($b['content']))['content'] ?? '') : $post->content,
+                'featured_image' => $post->featured_image,
+                'is_published' => $post->is_published,
+                'views' => $post->views,
+                'likes' => $post->likes,
+                'published_at' => $post->published_at,
+            ];
+        })->toArray();
+        return $posts;
+    }
+
+    /*
+     * Feature a post
+     *
+     * @param int $id
+     * @return void
+     */
+    public function feature(int $id): void
+    {
+        $post = Post::find($id);
+        if ($post && !$post->featured()->exists()) {
+            $post->featured()->create([]);
+        }
+    }
+
+    /*
+     * Unfeature a post
+     *
+     * @param int $id
+     * @return void
+     */
+    public function unfeature(int $id): void
+    {
+        Post::find($id)?->featured()->delete();
     }
 }

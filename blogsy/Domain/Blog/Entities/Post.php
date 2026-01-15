@@ -17,10 +17,12 @@ class Post
         public int $id,
         public string $title,
         public string $slug,
-        public string $content,
+        public array|string $content,
+        public ?string $featured_image,
         public bool $is_published,
         public int $views,
         public int $likes,
+        public ?string $published_at,
         public string $created_at,
         public string $updated_at,
     ) {}
@@ -36,10 +38,12 @@ class Post
             $data['id'] ?? 0,
             $data['title'],
             $data['slug'],
-            $data['content'],
+            $data['content'] ?? [],
+            $data['featured_image'] ?? null,
             $data['is_published'] ?? false,
             $data['views'] ?? 0,
             $data['likes'] ?? 0,
+            $data['published_at'] ?? null,
             $data['created_at'] ?? $now,
             $data['updated_at'] ?? $now
         );

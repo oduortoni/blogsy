@@ -37,10 +37,6 @@ class PostController extends Controller
     {
         $posts = $this->service->list();
 
-        if (! $posts) {
-            return $this->error('No posts found', null, 404);
-        }
-
         return $this->success($posts, 'Posts fetched successfully');
     }
 
@@ -54,8 +50,9 @@ class PostController extends Controller
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'content' => 'required|string',
+            'content' => 'required|array',
             'slug' => 'required|string|unique:posts,slug|max:255',
+            'featured_image' => 'nullable|string',
             'is_published' => 'sometimes|boolean',
         ]);
 
@@ -95,8 +92,9 @@ class PostController extends Controller
     {
         $validated = $request->validate([
             'title' => 'nullable|string|max:255',
-            'content' => 'nullable|string',
-            'slug' => 'nullable|string|unique:posts,slug|max:255',
+            'content' => 'nullable|array',
+            'slug' => 'nullable|string|max:255|unique:posts,slug,'.$id,
+            'featured_image' => 'nullable|string',
             'is_published' => 'sometimes|boolean',
         ]);
 
@@ -121,5 +119,40 @@ class PostController extends Controller
         $this->service->delete($id);
 
         return $this->success(null, 'Post deleted successfully');
+    }
+
+    /*
+    * Get featured posts
+    *
+    * @return JsonResponse
+    */
+    public function featured(): JsonResponse
+    {
+        $posts = $this->service->getFeatured();
+        return $this->success($posts, 'Featured posts fetched successfully');
+    }
+
+    /*
+    * Feature a post
+    *
+    * @param int $id
+    * @return JsonResponse
+    */
+    public function feature(int $id): JsonResponse
+    {
+        $this->service->feature($id);
+        return $this->success(null, 'Post featured successfully');
+    }
+
+    /*
+    * Unfeature a post
+    *
+    * @param int $id
+    * @return JsonResponse
+    */
+    public function unfeature(int $id): JsonResponse
+    {
+        $this->service->unfeature($id);
+        return $this->success(null, 'Post unfeatured successfully');
     }
 }

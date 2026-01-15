@@ -20,4 +20,7 @@ interface PostServiceInterface
     public function find(int $id): ?Post;
     public function update(int $id, array $data): ?Post;
     public function delete(int $id): void;
+    public function getFeatured(): array;
+    public function feature(int $id): void;
+    public function unfeature(int $id): void;
 }
