@@ -37,10 +37,6 @@ class PostController extends Controller
     {
         $posts = $this->service->list();
 
-        if (! $posts) {
-            return $this->error('No posts found', null, 404);
-        }
-
         return $this->success($posts, 'Posts fetched successfully');
     }
 
@@ -54,8 +50,9 @@ class PostController extends Controller
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'content' => 'required|string',
+            'content' => 'required|array',
             'slug' => 'required|string|unique:posts,slug|max:255',
+            'featured_image' => 'nullable|string',
             'is_published' => 'sometimes|boolean',
         ]);
 
@@ -95,8 +92,9 @@ class PostController extends Controller
     {
         $validated = $request->validate([
             'title' => 'nullable|string|max:255',
-            'content' => 'nullable|string',
+            'content' => 'nullable|array',
             'slug' => 'nullable|string|max:255|unique:posts,slug,'.$id,
+            'featured_image' => 'nullable|string',
             'is_published' => 'sometimes|boolean',
         ]);
 

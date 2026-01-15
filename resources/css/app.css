@@ -468,3 +468,74 @@ footer {
 .post-actions .btn-delete {
     background-color: var(--button);
 }
+
+/* Block Editor Styles */
+.block-editor {
+    border: 1px solid #ddd;
+    padding: 1rem;
+    border-radius: 4px;
+}
+
+.block {
+    position: relative;
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    border: 1px solid #eee;
+    border-radius: 4px;
+}
+
+.block-input {
+    width: 100%;
+    border: none;
+    outline: none;
+    font-family: inherit;
+}
+
+.block-heading .block-input {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.block-text .block-input {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.block-image img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0.5rem 0;
+}
+
+.btn-remove {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: #ff4444;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+}
+
+.block-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.block-actions button {
+    padding: 0.5rem 1rem;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.block-actions button:hover {
+    background: #0056b3;
+}

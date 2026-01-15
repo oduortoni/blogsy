@@ -20,7 +20,8 @@ interface Post {
     id: number;
     title: string;
     slug: string;
-    content: string;
+    content: ContentBlock[];
+    featured_image?: string | null;
     is_published: boolean;
     views: number;
     likes: number;
@@ -29,23 +30,39 @@ interface Post {
     updated_at: string;
 }
 
+interface ContentBlock {
+    type: 'heading' | 'text' | 'image';
+    content?: string;
+    image_id?: number;
+    image_url?: string;
+}
+
 interface PostInput {
     title: string;
     slug: string;
-    content: string;
+    content: ContentBlock[];
+    featured_image?: string;
     is_published: boolean;
 }
 
 class ApiService {
     private async request<T>(method: string, endpoint: string, data: any = null): Promise<ApiResponse<T>> {
         try {
-            const response = await axios({
+            const config: any = {
                 method,
                 url: `${API_BASE}${endpoint}`,
-                headers: { 'Content-Type': 'application/json' },
-                data
-            });
+            };
             
+            if (data) {
+                if (data instanceof FormData) {
+                    config.data = data;
+                } else {
+                    config.headers = { 'Content-Type': 'application/json' };
+                    config.data = data;
+                }
+            }
+            
+            const response = await axios(config);
             return { success: true, ...response.data };
         } catch (error) {
             const axiosError = error as AxiosError<{ message?: string; errors?: Record<string, string[]> }>;
@@ -78,7 +95,17 @@ class ApiService {
     deletePost(id: number): Promise<ApiResponse<null>> {
         return this.request<null>('DELETE', `/posts/${id}`);
     }
+
+    uploadImage(file: File): Promise<ApiResponse<{ id: number; url: string; filename: string }>> {
+        const formData = new FormData();
+        formData.append('image', file);
+        return this.request('POST', '/images', formData);
+    }
+
+    deleteImage(id: number): Promise<ApiResponse<null>> {
+        return this.request<null>('DELETE', `/images/${id}`);
+    }
 }
 
 export default new ApiService();
-export type { Post, PostInput, ApiResponse };
+export type { Post, PostInput, ApiResponse, ContentBlock };

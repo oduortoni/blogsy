@@ -27,6 +27,24 @@ const renderPost = (post: Post): string => {
         ? new Date(post.published_at).toLocaleDateString()
         : 'Not published';
     
+    const renderContent = () => {
+        if (Array.isArray(post.content)) {
+            return post.content.map(block => {
+                switch (block.type) {
+                    case 'heading':
+                        return `<h3>${block.content}</h3>`;
+                    case 'text':
+                        return `<p>${block.content}</p>`;
+                    case 'image':
+                        return `<img src="${block.image_url}" alt="Post image" />`;
+                    default:
+                        return '';
+                }
+            }).join('');
+        }
+        return `<p>${post.content}</p>`;
+    };
+    
     return `
         <article class="post-detail">
             <div class="post-actions" style="display: flex; justify-content: flex-end; gap: 0.5rem;">
@@ -34,6 +52,7 @@ const renderPost = (post: Post): string => {
                 <button class="btn btn-edit" onclick="window.router.navigate('/posts/edit/${post.id}')" title="Edit">✎</button>
                 <button class="btn btn-delete" onclick="window.router.navigate('/posts/delete/${post.id}')" title="Delete">🗑</button>
             </div>
+            ${post.featured_image ? `<img src="${post.featured_image}" alt="${post.title}" class="post-featured-large" />` : ''}
             <h2>${post.title}</h2>
             <p class="meta">
                 <strong>Views:</strong> ${post.views || 0} |
@@ -41,7 +60,7 @@ const renderPost = (post: Post): string => {
                 <strong>Published:</strong> ${publishedDate}
             </p>
             <div class="content">
-                ${post.content}
+                ${renderContent()}
             </div>
         </article>
     `;

@@ -8,4 +8,5 @@
 export { default as Dialog } from './dialog';
 export { PostCard } from './PostCard';
 export { PostForm } from './PostForm';
+export { BlockEditor } from './BlockEditor';
 export * from './ui';

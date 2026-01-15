@@ -61,11 +61,22 @@ class EloquentPostRepository implements PostRepositoryInterface
     public function list(): array
     {
         $posts = Post::all()->map(function ($post) {
+            $content = $post->content;
+            $preview = '';
+            
+            if (is_array($content)) {
+                $textBlock = collect($content)->first(fn($b) => isset($b['content']));
+                $preview = $textBlock['content'] ?? '';
+            } else {
+                $preview = $content ?? '';
+            }
+            
             return [
                 'id' => $post->id,
                 'title' => $post->title,
                 'slug' => $post->slug,
-                'content' => substr($post->content, 0, 100).'...',
+                'content' => substr($preview, 0, 100).'...',
+                'featured_image' => $post->featured_image,
                 'is_published' => $post->is_published,
                 'views' => $post->views,
                 'likes' => $post->likes,
@@ -95,6 +106,7 @@ class EloquentPostRepository implements PostRepositoryInterface
             'title' => $eloquentPost->title,
             'slug' => $eloquentPost->slug,
             'content' => $eloquentPost->content,
+            'featured_image' => $eloquentPost->featured_image,
             'is_published' => $eloquentPost->is_published,
             'views' => $eloquentPost->views,
             'likes' => $eloquentPost->likes,

@@ -17,11 +17,20 @@ export const PostCard = (post: Post, onClick?: (id: number) => void): string => 
         }
     }, 0);
 
+    const getPreview = () => {
+        if (Array.isArray(post.content)) {
+            const textBlock = post.content.find(b => b.type === 'text' || b.type === 'heading');
+            return textBlock?.content?.substring(0, 100) || 'No content';
+        }
+        return String(post.content).substring(0, 100);
+    };
+
     return `
         <div id="${id}" class="post">
+            ${post.featured_image ? `<img src="${post.featured_image}" alt="${post.title}" class="post-featured" />` : ''}
             <div class="post-content">
                 <h3>${post.title}</h3>
-                <p>${post.content.substring(0, 100)}...</p>
+                <p>${getPreview()}...</p>
                 <div class="post-meta">
                     <span>${post.views || 0} views</span>
                     <span>${post.likes || 0} likes</span>
