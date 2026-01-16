@@ -76,7 +76,11 @@ nav ul li:hover {
   display: block;
 }
 
-#app:not(:has(.home-container)) {
+#app:has(.auth-container) {
+  display: block;
+}
+
+#app:not(:has(.home-container)):not(:has(.auth-container)) {
   display: grid;
   grid-template-columns: 30% 70%;
 }
@@ -144,6 +148,8 @@ nav ul li:hover {
   object-fit: cover;
   border-radius: 10px;
   background: linear-gradient(135deg, rgba(0,0,0,0.18), rgba(0,0,0,0.05));
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
 }
 
 .post-content {
@@ -213,6 +219,8 @@ nav ul li:hover {
   object-fit: cover;
   border-radius: 10px;
   margin-bottom: 2rem;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
 }
 
 .post-detail h2 {
@@ -254,6 +262,8 @@ nav ul li:hover {
   height: auto;
   border-radius: 10px;
   margin: 2rem 0;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
 }
 
 /* Post Actions */
@@ -302,6 +312,62 @@ nav ul li:hover {
 .post-form {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+/* Auth */
+.auth-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 2rem;
+}
+
+.auth-form {
+  max-width: 450px;
+  width: 100%;
+  background: rgba(255,255,255,0.8);
+  padding: 3rem 2.5rem;
+  border-radius: 16px;
+  border: 1px solid rgba(0,0,0,0.1);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+.auth-form h2 {
+  margin: 0 0 2rem 0;
+  font-size: 2.5rem;
+  text-align: center;
+  letter-spacing: -0.02em;
+}
+
+.auth-form .form-field {
+  margin-bottom: 1.5rem;
+}
+
+.auth-form .form-field label {
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.auth-form .form-field input {
+  background: rgba(255,255,255,0.9);
+  border: 1px solid rgba(0,0,0,0.2);
+  padding: 0.85rem 1rem;
+  width: 100%;
+}
+
+.auth-form .form-field input:focus {
+  border-color: #111;
+  background: #fff;
+}
+
+.auth-form button[type="submit"] {
+  width: 100%;
+  padding: 0.85rem;
+  margin-top: 0.5rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  border-radius: 8px;
 }
 
 .form-field {
@@ -578,6 +644,8 @@ footer {
   height: 100%;
   object-fit: cover;
   transition: transform 0.4s ease;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
 }
 
 .featured-hero:hover img {
@@ -678,6 +746,8 @@ footer {
   object-fit: cover;
   border-radius: 16px;
   background: linear-gradient(135deg, rgba(0,0,0,0.15), rgba(0,0,0,0.05));
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
 }
 
 .pick-card div {

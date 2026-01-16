@@ -58,6 +58,7 @@ class PostController extends Controller
 
         $post = $this->service->create([
             ...$validated,
+            'user_id' => $request->user()->id,
             'views' => 0,
             'likes' => 0,
         ]);
@@ -103,6 +104,10 @@ class PostController extends Controller
             return $this->error('Post not found', null, 404);
         }
 
+        if ($post->user_id !== $request->user()->id) {
+            return $this->error('Unauthorized', null, 403);
+        }
+
         $updatedPost = $this->service->update($id, $validated);
 
         return $this->success($updatedPost, 'Post updated successfully');
@@ -114,8 +119,17 @@ class PostController extends Controller
     * @param int $id
     * @return JsonResponse
     */
-    public function destroy(int $id): JsonResponse
+    public function destroy(Request $request, int $id): JsonResponse
     {
+        $post = $this->service->find($id);
+        if (! $post) {
+            return $this->error('Post not found', null, 404);
+        }
+
+        if ($post->user_id !== $request->user()->id) {
+            return $this->error('Unauthorized', null, 403);
+        }
+
         $this->service->delete($id);
 
         return $this->success(null, 'Post deleted successfully');
@@ -138,8 +152,17 @@ class PostController extends Controller
     * @param int $id
     * @return JsonResponse
     */
-    public function feature(int $id): JsonResponse
+    public function feature(Request $request, int $id): JsonResponse
     {
+        $post = $this->service->find($id);
+        if (! $post) {
+            return $this->error('Post not found', null, 404);
+        }
+
+        if ($post->user_id !== $request->user()->id) {
+            return $this->error('Unauthorized', null, 403);
+        }
+
         $this->service->feature($id);
         return $this->success(null, 'Post featured successfully');
     }
@@ -150,8 +173,17 @@ class PostController extends Controller
     * @param int $id
     * @return JsonResponse
     */
-    public function unfeature(int $id): JsonResponse
+    public function unfeature(Request $request, int $id): JsonResponse
     {
+        $post = $this->service->find($id);
+        if (! $post) {
+            return $this->error('Post not found', null, 404);
+        }
+
+        if ($post->user_id !== $request->user()->id) {
+            return $this->error('Unauthorized', null, 403);
+        }
+
         $this->service->unfeature($id);
         return $this->success(null, 'Post unfeatured successfully');
     }

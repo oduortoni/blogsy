@@ -16,17 +16,9 @@
                 <li id="nav-home">Home</li>
                 <li id="nav-posts">Posts</li>
                 <li id="nav-about">About</li>
+                <li id="nav-login" style="display: none;">Login</li>
+                <li id="nav-logout" style="display: none;">Logout</li>
             </ul>
-            @if (Route::has('login'))
-                @auth
-                    <a href="{{ url('/dashboard') }}" id="nav-dashboard">Dashboard</a>
-                @else
-                    <a href="{{ route('login') }}" id="nav-login">Log in</a>
-                    @if (Route::has('register'))
-                        <a href="{{ route('register') }}" id="nav-register">Register</a>
-                    @endif
-                @endauth
-            @endif
         </nav>
     </header>
 

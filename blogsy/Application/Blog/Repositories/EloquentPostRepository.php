@@ -33,6 +33,7 @@ class EloquentPostRepository implements PostRepositoryInterface
             'is_published' => $post->is_published,
             'views' => $post->views,
             'likes' => $post->likes,
+            'user_id' => $post->user_id ?? null,
         ];
 
         if ($post->is_published) {
@@ -50,6 +51,7 @@ class EloquentPostRepository implements PostRepositoryInterface
             'is_published' => $created->is_published,
             'views' => $created->views,
             'likes' => $created->likes,
+            'user_id' => $created->user_id,
             'created_at' => $created->created_at,
             'updated_at' => $created->updated_at,
         ]);
@@ -82,6 +84,7 @@ class EloquentPostRepository implements PostRepositoryInterface
                 'is_published' => $post->is_published,
                 'views' => $post->views,
                 'likes' => $post->likes,
+                'user_id' => $post->user_id,
                 'published_at' => $post->published_at,
                 'created_at' => $post->created_at,
                 'updated_at' => $post->updated_at,
@@ -112,6 +115,7 @@ class EloquentPostRepository implements PostRepositoryInterface
             'is_published' => $eloquentPost->is_published,
             'views' => $eloquentPost->views,
             'likes' => $eloquentPost->likes,
+            'user_id' => $eloquentPost->user_id,
             'published_at' => $eloquentPost->published_at,
             'created_at' => $eloquentPost->created_at,
             'updated_at' => $eloquentPost->updated_at,
