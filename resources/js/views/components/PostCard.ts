@@ -8,9 +8,10 @@
 import type { Post } from '../../lib/api';
 import api from '../../lib/api';
 
-export const PostCard = (post: Post, onClick?: (id: number) => void, onFeatureToggle?: (id: number, isFeatured: boolean) => void): string => {
+export const PostCard = (post: Post, onClick?: (id: number) => void, onFeatureToggle?: (id: number, isFeatured: boolean) => void, onLike?: (id: number) => void): string => {
     const id = `post-${post.id}`;
     const featureBtnId = `feature-btn-${post.id}`;
+    const likeBtnId = `like-btn-${post.id}`;
     
     setTimeout(() => {
         const card = document.getElementById(id);
@@ -28,6 +29,14 @@ export const PostCard = (post: Post, onClick?: (id: number) => void, onFeatureTo
                 onFeatureToggle(post.id, !!(post as any).is_featured);
             };
         }
+
+        const likeBtn = document.getElementById(likeBtnId);
+        if (likeBtn && onLike) {
+            likeBtn.onclick = (e) => {
+                e.stopPropagation();
+                onLike(post.id);
+            };
+        }
     }, 0);
 
     const getPreview = () => {
@@ -40,6 +49,7 @@ export const PostCard = (post: Post, onClick?: (id: number) => void, onFeatureTo
 
     const user = api.getUser();
     const isOwner = user && post.user_id === user.id;
+    const userLiked = (post as any).user_liked || false;
 
     return `
         <div id="${id}" class="post">
@@ -49,7 +59,7 @@ export const PostCard = (post: Post, onClick?: (id: number) => void, onFeatureTo
                 <p>${getPreview()}...</p>
                 <div class="post-meta">
                     <span>${post.views || 0} views</span>
-                    <span>${post.likes || 0} likes</span>
+                    <button id="like-btn-${post.id}" class="feature-btn" title="${userLiked ? 'Unlike' : 'Like'}">${userLiked ? '♥' : '♡'} ${post.likes || 0}</button>
                     ${isOwner ? `<button id="${featureBtnId}" class="feature-btn" title="${(post as any).is_featured ? 'Unfeature' : 'Feature'}">${(post as any).is_featured ? '★' : '☆'}</button>` : ''}
                 </div>
             </div>

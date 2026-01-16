@@ -27,6 +27,9 @@ Route::prefix('v1')->group(function () {
         Route::delete('/posts/{id}', [PostController::class, 'destroy'])->where('id', '[0-9]+')->name('v1.posts.destroy');
         Route::post('/posts/{id}/feature', [PostController::class, 'feature'])->where('id', '[0-9]+')->name('v1.posts.feature');
         Route::delete('/posts/{id}/feature', [PostController::class, 'unfeature'])->where('id', '[0-9]+')->name('v1.posts.unfeature');
+        Route::post('/posts/{id}/like', [PostController::class, 'like'])->where('id', '[0-9]+')->name('v1.posts.like');
+        Route::delete('/posts/{id}/like', [PostController::class, 'unlike'])->where('id', '[0-9]+')->name('v1.posts.unlike');
+        Route::get('/posts/{id}/like', [PostController::class, 'checkLike'])->where('id', '[0-9]+')->name('v1.posts.checkLike');
         
         /* Images */
         Route::post('/images', [ImageController::class, 'upload'])->name('v1.images.upload');
