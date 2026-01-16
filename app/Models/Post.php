@@ -18,6 +18,7 @@ class Post extends Model
         'published_at',
         'views',
         'likes',
+        'user_id',
     ];
 
     protected $table = 'posts';

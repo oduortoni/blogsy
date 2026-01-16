@@ -27,6 +27,9 @@ const renderPost = (post: Post): string => {
         ? new Date(post.published_at).toLocaleDateString()
         : 'Not published';
     
+    const user = api.getUser();
+    const isOwner = user && post.user_id === user.id;
+    
     const renderContent = () => {
         if (Array.isArray(post.content)) {
             return post.content.map(block => {
@@ -50,8 +53,10 @@ const renderPost = (post: Post): string => {
         <article class="post-detail">
             <div class="post-actions" style="display: flex; justify-content: flex-end; gap: 0.5rem;">
                 <button class="btn btn-back" onclick="window.router.navigate('/posts')" title="Back">←</button>
-                <button class="btn btn-edit" onclick="window.router.navigate('/posts/edit/${post.id}')" title="Edit">✎</button>
-                <button class="btn btn-delete" onclick="window.router.navigate('/posts/delete/${post.id}')" title="Delete">🗑</button>
+                ${isOwner ? `
+                    <button class="btn btn-edit" onclick="window.router.navigate('/posts/edit/${post.id}')" title="Edit">✎</button>
+                    <button class="btn btn-delete" onclick="window.router.navigate('/posts/delete/${post.id}')" title="Delete">🗑</button>
+                ` : ''}
             </div>
             ${post.featured_image ? `<img src="${post.featured_image}" alt="${post.title}" class="post-featured-large" />` : ''}
             <h2>${post.title}</h2>
