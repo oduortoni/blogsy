@@ -195,6 +195,18 @@ class ApiService {
     unfeaturePost(id: number): Promise<ApiResponse<null>> {
         return this.request<null>('DELETE', `/posts/${id}/feature`);
     }
+
+    likePost(id: number): Promise<ApiResponse<null>> {
+        return this.request<null>('POST', `/posts/${id}/like`);
+    }
+
+    unlikePost(id: number): Promise<ApiResponse<null>> {
+        return this.request<null>('DELETE', `/posts/${id}/like`);
+    }
+
+    checkLike(id: number): Promise<ApiResponse<{ liked: boolean }>> {
+        return this.request<{ liked: boolean }>('GET', `/posts/${id}/like`);
+    }
 }
 
 export default new ApiService();

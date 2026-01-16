@@ -187,4 +187,51 @@ class PostController extends Controller
         $this->service->unfeature($id);
         return $this->success(null, 'Post unfeatured successfully');
     }
+
+    public function like(Request $request, int $id): JsonResponse
+    {
+        $post = $this->service->find($id);
+        if (! $post) {
+            return $this->error('Post not found', null, 404);
+        }
+
+        $userId = $request->user()->id;
+        $existing = \App\Models\PostLike::where('user_id', $userId)->where('post_id', $id)->first();
+        
+        if ($existing) {
+            return $this->success(['already_liked' => true], 'Already liked');
+        }
+
+        \App\Models\PostLike::create(['user_id' => $userId, 'post_id' => $id]);
+        \App\Models\Post::where('id', $id)->increment('likes');
+
+        return $this->success(null, 'Post liked successfully');
+    }
+
+    public function unlike(Request $request, int $id): JsonResponse
+    {
+        $post = $this->service->find($id);
+        if (! $post) {
+            return $this->error('Post not found', null, 404);
+        }
+
+        $userId = $request->user()->id;
+        $deleted = \App\Models\PostLike::where('user_id', $userId)->where('post_id', $id)->delete();
+        
+        if (!$deleted) {
+            return $this->success(['not_liked' => true], 'Not liked yet');
+        }
+
+        \App\Models\Post::where('id', $id)->decrement('likes');
+
+        return $this->success(null, 'Post unliked successfully');
+    }
+
+    public function checkLike(Request $request, int $id): JsonResponse
+    {
+        $userId = $request->user()->id;
+        $liked = \App\Models\PostLike::where('user_id', $userId)->where('post_id', $id)->exists();
+        
+        return $this->success(['liked' => $liked]);
+    }
 }

@@ -23,7 +23,19 @@ const Posts = async (app: HTMLElement): Promise<void> => {
     const featuredResult = await api.getFeaturedPosts();
     const featuredIds = featuredResult.success && featuredResult.data ? featuredResult.data.map((p: any) => p.id) : [];
     
-    const postsWithFeatured = posts.map(p => ({ ...p, is_featured: featuredIds.includes(p.id) }));
+    // Check like status for each post if authenticated
+    const postsWithMeta = await Promise.all(posts.map(async (p) => {
+        let userLiked = false;
+        if (api.isAuthenticated()) {
+            const likeCheck = await api.checkLike(p.id);
+            if (likeCheck.success && likeCheck.data) {
+                userLiked = likeCheck.data.liked;
+            }
+        }
+        return { ...p, is_featured: featuredIds.includes(p.id), user_liked: userLiked };
+    }));
+    
+    const postsWithFeatured = postsWithMeta;
     
     const handleFeatureToggle = async (id: number, isFeatured: boolean) => {
         if (isFeatured) {
@@ -38,13 +50,42 @@ const Posts = async (app: HTMLElement): Promise<void> => {
         render();
     };
 
+    const handleLike = async (id: number) => {
+        if (!api.isAuthenticated()) {
+            window.router.navigate('/login');
+            return;
+        }
+        
+        const idx = postsWithFeatured.findIndex(p => p.id === id);
+        if (idx === -1) return;
+        
+        const post = postsWithFeatured[idx];
+        const userLiked = (post as any).user_liked || false;
+        
+        if (userLiked) {
+            const result = await api.unlikePost(id);
+            if (result.success) {
+                postsWithFeatured[idx].likes = Math.max(0, (postsWithFeatured[idx].likes || 0) - 1);
+                (postsWithFeatured[idx] as any).user_liked = false;
+                render();
+            }
+        } else {
+            const result = await api.likePost(id);
+            if (result.success) {
+                postsWithFeatured[idx].likes = (postsWithFeatured[idx].likes || 0) + 1;
+                (postsWithFeatured[idx] as any).user_liked = true;
+                render();
+            }
+        }
+    };
+
     const render = () => {
         app.innerHTML = `
             <h2>POSTS<button onclick="window.router.navigate('/posts/create')" class="create-btn" title="Create New Post">+</button></h2>
             <div class="posts">
                 ${
                     postsWithFeatured.length > 0
-                        ? postsWithFeatured.map(post => PostCard(post, (id) => window.router.navigate(`/posts/post/${id}`), handleFeatureToggle)).join('')
+                        ? postsWithFeatured.map(post => PostCard(post, (id) => window.router.navigate(`/posts/post/${id}`), handleFeatureToggle, handleLike)).join('')
                         : EmptyState('No posts found.')
                 }
             </div>

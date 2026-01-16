@@ -19,10 +19,48 @@ const PostView = async (app: HTMLElement, params: { id: string }): Promise<void>
         return;
     }
 
-    app.innerHTML = renderPost(result.data);
+    let post = result.data;
+    let userLiked = false;
+
+    // Check if user liked this post
+    if (api.isAuthenticated()) {
+        const likeCheck = await api.checkLike(post.id);
+        if (likeCheck.success && likeCheck.data) {
+            userLiked = likeCheck.data.liked;
+        }
+    }
+
+    const handleLikeToggle = async () => {
+        if (!api.isAuthenticated()) {
+            window.router.navigate('/login');
+            return;
+        }
+
+        if (userLiked) {
+            const result = await api.unlikePost(post.id);
+            if (result.success) {
+                post.likes = Math.max(0, (post.likes || 0) - 1);
+                userLiked = false;
+                render();
+            }
+        } else {
+            const result = await api.likePost(post.id);
+            if (result.success) {
+                post.likes = (post.likes || 0) + 1;
+                userLiked = true;
+                render();
+            }
+        }
+    };
+
+    const render = () => {
+        app.innerHTML = renderPost(post, userLiked, handleLikeToggle);
+    };
+
+    render();
 };
 
-const renderPost = (post: Post): string => {
+const renderPost = (post: Post, userLiked: boolean, onLikeToggle: () => void): string => {
     const publishedDate = post.published_at 
         ? new Date(post.published_at).toLocaleDateString()
         : 'Not published';
@@ -48,7 +86,7 @@ const renderPost = (post: Post): string => {
         return `<p>${post.content}</p>`;
     };
     
-    return `
+    const html = `
         <h2>${post.title}</h2>
         <article class="post-detail">
             <div class="post-actions" style="display: flex; justify-content: flex-end; gap: 0.5rem;">
@@ -62,7 +100,8 @@ const renderPost = (post: Post): string => {
             <h2>${post.title}</h2>
             <p class="meta">
                 <strong>Views:</strong> ${post.views || 0} |
-                <strong>Likes:</strong> ${post.likes || 0} |
+                <strong>Likes:</strong> ${post.likes || 0}
+                <button id="like-btn" class="feature-btn" style="margin-left: 1rem;" title="${userLiked ? 'Unlike' : 'Like'}">${userLiked ? '♥' : '♡'}</button> |
                 <strong>Published:</strong> ${publishedDate}
             </p>
             <div class="content">
@@ -70,6 +109,15 @@ const renderPost = (post: Post): string => {
             </div>
         </article>
     `;
+
+    setTimeout(() => {
+        const likeBtn = document.getElementById('like-btn');
+        if (likeBtn) {
+            likeBtn.onclick = onLikeToggle;
+        }
+    }, 0);
+
+    return html;
 };
 
 export default PostView;

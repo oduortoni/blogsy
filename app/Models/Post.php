@@ -39,6 +39,11 @@ class Post extends Model
         return $this->hasOne(FeaturedPost::class);
     }
 
+    public function likes()
+    {
+        return $this->hasMany(PostLike::class);
+    }
+
     public function getCreatedAtAttribute($value)
     {
         return Carbon::parse($value)->format('d-m-Y H:i:s');
