@@ -71,6 +71,9 @@ Fetch a single post by ID.
     "is_published": true,
     "views": 0,
     "likes": 0,
+    "user": {
+      "name": "John Doe"
+    },
     "created_at": "14-01-2026 07:15:14",
     "updated_at": "14-01-2026 07:15:14"
   },

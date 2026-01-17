@@ -29,7 +29,7 @@ const Register = async (app: HTMLElement): Promise<void> => {
                     <button type="submit" class="btn-primary">Register</button>
                 </form>
                 <p style="text-align: center; margin-top: 1rem; opacity: 0.7;">
-                    Already registered? <a href="#" id="login-link" style="color: #111; text-decoration: underline;">Login</a>
+                    Already registered? <a href="#" id="login-link" style="color: var(--color-link); text-decoration: underline;">Login</a>
                 </p>
             </div>
         </div>

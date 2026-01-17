@@ -26,7 +26,7 @@ const PostUpdate = async (app: HTMLElement, params: { id: string }): Promise<voi
 
     const render = () => {
         app.innerHTML = `
-            <h2>Edit Post</h2>
+            <h2 style="text-align: center; color: var(--color-foreground-muted); font-weight: 400; margin-bottom: 2rem;">Edit Post</h2>
             ${PostForm({
                 post,
                 onSubmit: handleSubmit,
@@ -45,9 +45,7 @@ const PostUpdate = async (app: HTMLElement, params: { id: string }): Promise<voi
             return;
         }
 
-        Dialog('Success', updateResult.message || 'Post updated successfully', () => {
-            window.router.navigate(`/posts/post/${params.id}`);
-        });
+        window.router.navigate(`/posts/post/${params.id}`);
     };
 
     render();

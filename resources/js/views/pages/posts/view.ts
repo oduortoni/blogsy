@@ -1,6 +1,6 @@
 /*
  * file: blogsy/resources/js/views/pages/posts/view.ts
- * description: Single post view page
+ * description: Single post view page with editorial layout
  * author: toni
  * date: 2026-01-14
  */
@@ -11,7 +11,7 @@ import type { Post } from '../../../lib/api';
 
 const PostView = async (app: HTMLElement, params: { id: string }): Promise<void> => {
     app.innerHTML = Loading('Loading post...');
-    
+
     const result = await api.getPost(parseInt(params.id));
 
     if (!result.success || !result.data) {
@@ -55,19 +55,36 @@ const PostView = async (app: HTMLElement, params: { id: string }): Promise<void>
 
     const render = () => {
         app.innerHTML = renderPost(post, userLiked, handleLikeToggle);
+        setupFadeIn();
     };
 
     render();
 };
 
 const renderPost = (post: Post, userLiked: boolean, onLikeToggle: () => void): string => {
-    const publishedDate = post.published_at 
+    const calculateReadTime = (content: any): number => {
+        let wordCount = 0;
+        if (Array.isArray(content)) {
+            content.forEach(block => {
+                if (block.content) {
+                    wordCount += block.content.split(' ').length;
+                }
+            });
+        } else {
+            wordCount = String(content).split(' ').length;
+        }
+        return Math.max(1, Math.ceil(wordCount / 200)); // 200 words per minute
+    };
+
+    const readTime = calculateReadTime(post.content);
+
+    const publishedDate = post.published_at
         ? new Date(post.published_at).toLocaleDateString()
         : 'Not published';
-    
+
     const user = api.getUser();
     const isOwner = user && post.user_id === user.id;
-    
+
     const renderContent = () => {
         if (Array.isArray(post.content)) {
             return post.content.map(block => {
@@ -77,7 +94,7 @@ const renderPost = (post: Post, userLiked: boolean, onLikeToggle: () => void): s
                     case 'text':
                         return `<p>${block.content}</p>`;
                     case 'image':
-                        return `<img src="${block.image_url}" alt="Post image" />`;
+                        return `<img src="${block.image_url}" alt="Article image" class="article-inline-image" />`;
                     default:
                         return '';
                 }
@@ -85,39 +102,91 @@ const renderPost = (post: Post, userLiked: boolean, onLikeToggle: () => void): s
         }
         return `<p>${post.content}</p>`;
     };
-    
-    const html = `
-        <h2>${post.title}</h2>
-        <article class="post-detail">
-            <div class="post-actions" style="display: flex; justify-content: flex-end; gap: 0.5rem;">
-                <button class="btn btn-back" onclick="window.router.navigate('/posts')" title="Back">←</button>
-                ${isOwner ? `
-                    <button class="btn btn-edit" onclick="window.router.navigate('/posts/edit/${post.id}')" title="Edit">✎</button>
-                    <button class="btn btn-delete" onclick="window.router.navigate('/posts/delete/${post.id}')" title="Delete">🗑</button>
-                ` : ''}
-            </div>
-            ${post.featured_image ? `<img src="${post.featured_image}" alt="${post.title}" class="post-featured-large" />` : ''}
-            <h2>${post.title}</h2>
-            <p class="meta">
-                <strong>Views:</strong> ${post.views || 0} |
-                <strong>Likes:</strong> ${post.likes || 0}
-                <button id="like-btn" class="feature-btn" style="margin-left: 1rem;" title="${userLiked ? 'Unlike' : 'Like'}">${userLiked ? '♥' : '♡'}</button> |
-                <strong>Published:</strong> ${publishedDate}
-            </p>
-            <div class="content">
-                ${renderContent()}
-            </div>
-        </article>
-    `;
 
-    setTimeout(() => {
-        const likeBtn = document.getElementById('like-btn');
-        if (likeBtn) {
-            likeBtn.onclick = onLikeToggle;
-        }
-    }, 0);
+    const html = `
+        <div class="page">
+            <nav class="article-nav">
+                <span style="cursor: pointer;">← Back to posts</span>
+                <span>${new Date().getFullYear()}</span>
+            </nav>
+
+            <div class="article-divider"></div>
+
+            <section class="article-hero fade-in">
+                <div class="article-hero-left">
+                <h1 class="article-title">${post.title}</h1>
+                <div class="article-meta">
+                    <div>${publishedDate}</div>
+                    <div>${post.views || 0} views</div>
+                    <div>${readTime} min read</div>
+                    <div class="article-author">
+                        <div class="article-author-avatar"></div>
+                        <div>
+                            <strong>${post.user?.name || 'Anonymous'}</strong>
+                        </div>
+                    </div>
+                </div>
+                </div>
+                <div class="article-hero-right">
+                    <div class="article-hero-image" 
+                        ${post.featured_image ? `style="background-image: url('${post.featured_image}')"` : ''}
+                        data-id="${post.id}">
+                    </div>
+                    <div class="article-actions">
+                        <button id="article-like-btn" 
+                                class="article-like-btn ${userLiked ? 'liked' : ''}"
+                                title="${userLiked ? 'Unlike' : 'Like'}">
+                            ${userLiked ? '♥' : '♡'} ${post.likes || 0}
+                        </button>
+                        ${isOwner ? `
+                            <button class="btn-icon" onclick="window.router.navigate('/posts/edit/${post.id}')" title="Edit">✎</button>
+                            <button class="btn-icon" onclick="window.router.navigate('/posts/delete/${post.id}')" title="Delete">🗑</button>
+                        ` : ''}
+                    </div>
+                </div>
+            </section>
+
+            <section class="article-content fade-in">
+                ${renderContent()}
+            </section>
+        </div>
+    `;
 
     return html;
 };
+
+function setupFadeIn() {
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll('.fade-in').forEach((el) => observer.observe(el as Element));
+
+    // Setup back navigation
+    const backNav = document.querySelector('.article-nav span:first-child');
+    backNav?.addEventListener('click', () => window.router.navigate('/posts'));
+
+    // Setup like button
+    const likeBtn = document.getElementById('article-like-btn');
+    if (likeBtn) {
+        likeBtn.addEventListener('click', () => {
+            const btn = likeBtn as HTMLButtonElement;
+            if (btn.classList.contains('liked')) {
+                const currentLikes = parseInt(btn.textContent?.match(/\d+/)?.[0] || '0');
+                btn.innerHTML = `♡ ${currentLikes - 1}`;
+                btn.classList.remove('liked');
+            } else {
+                const currentLikes = parseInt(btn.textContent?.match(/\d+/)?.[0] || '0');
+                btn.innerHTML = `♥ ${currentLikes + 1}`;
+                btn.classList.add('liked');
+            }
+        });
+    }
+}
+
 
 export default PostView;

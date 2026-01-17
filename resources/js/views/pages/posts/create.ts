@@ -14,7 +14,7 @@ const PostCreate = (app: HTMLElement): void => {
 
     const render = () => {
         app.innerHTML = `
-            <h2>Create New Post</h2>
+            <h2 style="text-align: center; color: var(--color-foreground-muted); font-weight: 400; margin-bottom: 2rem;">Create New Post</h2>
             ${PostForm({
                 onSubmit: handleSubmit,
                 errors,
@@ -26,15 +26,13 @@ const PostCreate = (app: HTMLElement): void => {
     const handleSubmit = async (data: PostInput): Promise<void> => {
         const result = await api.createPost(data);
 
-        if (!result.success) {
+        if (!result.success || !result.data) {
             errors = result.errors || null;
             render();
             return;
         }
 
-        Dialog('Success', result.message || 'Post created successfully', () => {
-            window.router.navigate('/posts');
-        });
+        window.router.navigate(`/posts/post/${result.data.id}`);
     };
 
     render();

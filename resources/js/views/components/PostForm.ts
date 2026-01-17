@@ -24,15 +24,13 @@ export const PostForm = ({
     submitText = 'Submit' 
 }: PostFormConfig): string => {
     const formId = 'post-form';
-    const formStateKey = `form-state-${formId}`;
+    const formStateKey = `form-state-${formId}-${Date.now()}`;
     
-    // Retrieve or initialize state
-    if (!(window as any)[formStateKey]) {
-        (window as any)[formStateKey] = {
-            contentBlocks: post?.content || [{ type: 'text', content: '' }],
-            featuredImageUrl: post?.featured_image || ''
-        };
-    }
+    // Initialize fresh state for each form instance
+    (window as any)[formStateKey] = {
+        contentBlocks: post?.content || [{ type: 'text', content: '' }],
+        featuredImageUrl: post?.featured_image || ''
+    };
     
     const state = (window as any)[formStateKey];
     let contentBlocks = state.contentBlocks;
@@ -131,7 +129,10 @@ export const PostForm = ({
                     Published
                 </label>
             </div>
-            <button type="submit" class="btn-primary">${submitText}</button>
+            <div class="form-actions">
+                <button type="button" class="btn-secondary" onclick="history.back()">Cancel</button>
+                <button type="submit" class="btn-primary">${submitText}</button>
+            </div>
         </form>
     `;
 };
