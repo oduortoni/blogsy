@@ -23,6 +23,7 @@ class Post
         public int $views,
         public int $likes,
         public ?int $user_id,
+        public ?array $user,
         public ?string $published_at,
         public string $created_at,
         public string $updated_at,
@@ -45,6 +46,7 @@ class Post
             $data['views'] ?? 0,
             $data['likes'] ?? 0,
             $data['user_id'] ?? null,
+            $data['user'] ?? null,
             $data['published_at'] ?? null,
             $data['created_at'] ?? $now,
             $data['updated_at'] ?? $now

@@ -25,7 +25,7 @@ const Login = async (app: HTMLElement): Promise<void> => {
                     <button type="submit" class="btn-primary">Login</button>
                 </form>
                 <p style="text-align: center; margin-top: 1rem; opacity: 0.7;">
-                    Don't have an account? <a href="#" id="register-link" style="color: #111; text-decoration: underline;">Register</a>
+                    Don't have an account? <a href="#" id="register-link" style="color: var(--color-link); text-decoration: underline;">Register</a>
                 </p>
             </div>
         </div>

@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Blogsy\Application\Blog\Repositories;
 
 use App\Models\Post;
+use App\Models\User;
 use Blogsy\Domain\Blog\Entities\Post as DomainPost;
 use Blogsy\Domain\Blog\Repositories\PostRepositoryInterface;
 
@@ -101,7 +102,7 @@ class EloquentPostRepository implements PostRepositoryInterface
      */
     public function find(int $id): ?DomainPost
     {
-        $eloquentPost = Post::find($id);
+        $eloquentPost = Post::with('user:id,name')->find($id);
         if (! $eloquentPost) {
             return null;
         }
@@ -116,6 +117,7 @@ class EloquentPostRepository implements PostRepositoryInterface
             'views' => $eloquentPost->views,
             'likes' => $eloquentPost->likes,
             'user_id' => $eloquentPost->user_id,
+            'user' => $eloquentPost->user ? ['name' => $eloquentPost->user->name] : null,
             'published_at' => $eloquentPost->published_at,
             'created_at' => $eloquentPost->created_at,
             'updated_at' => $eloquentPost->updated_at,

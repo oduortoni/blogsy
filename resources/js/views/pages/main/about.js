@@ -11,7 +11,9 @@
 
 const About = (app) => {
     app.innerHTML = `
-        <h1>About</h1>
+        <div class="page">
+            <h1 style="text-align: center; color: var(--color-foreground-muted); font-weight: 400;">About</h1>
+        </div>
     `;
 };
 

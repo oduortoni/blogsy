@@ -136,6 +136,14 @@ function setupCardSelection() {
             window.router.navigate(`/posts/post/${visual.dataset.id}`);
         }
     });
+
+    // Featured card click navigates to post
+    const featuredCard = document.getElementById('featured-card');
+    featuredCard?.addEventListener('click', () => {
+        if (visual.dataset.id) {
+            window.router.navigate(`/posts/post/${visual.dataset.id}`);
+        }
+    });
 }
 
 export default Home;

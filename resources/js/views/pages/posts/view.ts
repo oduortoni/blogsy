@@ -11,7 +11,7 @@ import type { Post } from '../../../lib/api';
 
 const PostView = async (app: HTMLElement, params: { id: string }): Promise<void> => {
     app.innerHTML = Loading('Loading post...');
-    
+
     const result = await api.getPost(parseInt(params.id));
 
     if (!result.success || !result.data) {
@@ -62,13 +62,29 @@ const PostView = async (app: HTMLElement, params: { id: string }): Promise<void>
 };
 
 const renderPost = (post: Post, userLiked: boolean, onLikeToggle: () => void): string => {
-    const publishedDate = post.published_at 
+    const calculateReadTime = (content: any): number => {
+        let wordCount = 0;
+        if (Array.isArray(content)) {
+            content.forEach(block => {
+                if (block.content) {
+                    wordCount += block.content.split(' ').length;
+                }
+            });
+        } else {
+            wordCount = String(content).split(' ').length;
+        }
+        return Math.max(1, Math.ceil(wordCount / 200)); // 200 words per minute
+    };
+
+    const readTime = calculateReadTime(post.content);
+
+    const publishedDate = post.published_at
         ? new Date(post.published_at).toLocaleDateString()
         : 'Not published';
-    
+
     const user = api.getUser();
     const isOwner = user && post.user_id === user.id;
-    
+
     const renderContent = () => {
         if (Array.isArray(post.content)) {
             return post.content.map(block => {
@@ -78,7 +94,7 @@ const renderPost = (post: Post, userLiked: boolean, onLikeToggle: () => void): s
                     case 'text':
                         return `<p>${block.content}</p>`;
                     case 'image':
-                        return `<div class="article-inline-image" style="background-image: url('${block.image_url}')"></div>`;
+                        return `<img src="${block.image_url}" alt="Article image" class="article-inline-image" />`;
                     default:
                         return '';
                 }
@@ -86,7 +102,7 @@ const renderPost = (post: Post, userLiked: boolean, onLikeToggle: () => void): s
         }
         return `<p>${post.content}</p>`;
     };
-    
+
     const html = `
         <div class="page">
             <nav class="article-nav">
@@ -99,14 +115,17 @@ const renderPost = (post: Post, userLiked: boolean, onLikeToggle: () => void): s
             <section class="article-hero fade-in">
                 <div class="article-hero-left">
                 <h1 class="article-title">${post.title}</h1>
-                <div class="article-meta">${publishedDate} · ${post.views || 0} views</div>
+                <div class="article-meta">
+                    <div>${publishedDate}</div>
+                    <div>${post.views || 0} views</div>
+                    <div>${readTime} min read</div>
                     <div class="article-author">
                         <div class="article-author-avatar"></div>
                         <div>
-                            <strong>Author</strong><br>
-                            Blogsy Writer
+                            <strong>${post.user?.name || 'Anonymous'}</strong>
                         </div>
                     </div>
+                </div>
                 </div>
                 <div class="article-hero-right">
                     <div class="article-hero-image" 
